@@ -6,51 +6,51 @@ html
     meta name="keywords" content="Carbon target bilan carbone giec ademe environnment impact objectifs calcul"
     meta http-equiv="Content-Type" content="text/html; charset=utf-8"
     meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"
-  
+
     title Carbon Target
 
     link rel="stylesheet" href="style.css"
 
-    script type="module"
-      |  import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
-      |  window.Stimulus = Application.start()
-      |
-      |  Stimulus.register("carbon-item", class extends Controller {
-      |    static targets = [ "quantity", "frequency", "result" ]
-      |    static values = { emissionFactor: Number }
-      |
-      |    initialize() {
-      |      this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
-      |    }
-      |
-      |    computeFrequencyFactor() {
-      |      return this.frequencyHash[this.frequencyTarget.value]
-      |    }
-      |
-      |    updateResult() {
-      |      let result = this.quantityTarget.value
-      |        * this.computeFrequencyFactor()
-      |        * this.emissionFactorValue
-      |
-      |      this.resultTarget.value = result || 0
-      |      this.resultTarget.dispatchEvent(new Event('change'))
-      |    }
-      |  })
-      |
-      |  Stimulus.register("carbon-recap", class extends Controller {
-      |    static targets = [ "item", "total" ]
-      |
-      |    // Sums the result of each line & updates the total
-      |    updateResult() {
-      |      let result = 0
-      |      this.itemTargets.forEach(item => {
-      |        result += parseInt(item.value)
-      |      })
-      |
-      |      this.totalTarget.innerHTML = result
-      |    }
-      |  })
-      |
+    javascript [type="module"]:
+      import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+      window.Stimulus = Application.start()
+
+      Stimulus.register("carbon-item", class extends Controller {
+        static targets = [ "quantity", "frequency", "result" ]
+        static values = { emissionFactor: Number }
+
+        initialize() {
+          this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
+        }
+
+        computeFrequencyFactor() {
+          return this.frequencyHash[this.frequencyTarget.value]
+        }
+
+        updateResult() {
+          let result = this.quantityTarget.value
+            * this.computeFrequencyFactor()
+            * this.emissionFactorValue
+
+          this.resultTarget.value = result || 0
+          this.resultTarget.dispatchEvent(new Event('change'))
+        }
+      })
+
+      Stimulus.register("carbon-recap", class extends Controller {
+        static targets = [ "item", "total" ]
+
+        // Sums the result of each line & updates the total
+        updateResult() {
+          let result = 0
+          this.itemTargets.forEach(item => {
+            result += parseInt(item.value)
+          })
+
+          this.totalTarget.innerHTML = result
+        }
+      })
+
 
     script type="text/javascript" src="javascript.js"
 
@@ -81,7 +81,7 @@ body class="container block is-max-desktop"
       div class="level-item has-text-centered"
         div
           p class="heading" VS
-      
+
       div class="box level-item has-text-centered has-background-danger-light"
         div
           p class="heading" Cible
@@ -93,15 +93,15 @@ body class="container block is-max-desktop"
     div class="block"
       h2 class="title is-3" Trajets
       ul
-        li data-carbon-item-emission-factor-value="2"
+        li data-controller="carbon-item" data-carbon-item-emission-factor-value="2"
           == Slim::Template.new("./src/carbon_item.slim").render(name: "avion", id: "plane")
-        li data-carbon-item-emission-factor-value="1.5"
+        li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.5"
           == Slim::Template.new("./src/carbon_item.slim").render(name: "voiture", id: "car")
 
     div class="block"
       h2 class="title is-3" Alimentation
       ul
-        li data-carbon-item-emission-factor-value="8"
+        li data-controller="carbon-item" data-carbon-item-emission-factor-value="8"
           == Slim::Template.new("./src/carbon_item.slim").render(name: "poulet", id: "chicken")
-        li data-carbon-item-emission-factor-value="42"
+        li data-controller="carbon-item" data-carbon-item-emission-factor-value="42"
           == Slim::Template.new("./src/carbon_item.slim").render(name: "boeuf", id: "beef")

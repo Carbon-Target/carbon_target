@@ -39,10 +39,10 @@ function javascript(cb) {
 };
 
 function watchFiles() {
+  watch('./src/js/*', javascript);
   watch('./src/*.slim', index);
   watch('./src/images/**/*', images);
   watch('./src/css/*', css);
-  watch('./src/js/*', javascript);
   watch('./src/img/*', images);
 }
 

@@ -6,16 +6,16 @@ div class="columns is-mobile"
   div class="column is-three-fifths"
     div class="field has-addons"
       div class="control"
-        input id=send(:[], :id) class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity"
+        input id=send(:[], :id) class="input" type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
 
       div class="control"
         div class="select"
           select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-            option
+            option value="week"
               = "/semaine"
-            option
+            option value="month"
               = "/mois"
-            option
+            option value="year"
               = "/an"
 
   div class="column"
