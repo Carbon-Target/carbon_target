@@ -30,6 +30,21 @@
           * this.emissionFactorValue
 
         this.resultTarget.value = result || 0
+        this.resultTarget.dispatchEvent(new Event('change'))
+      }
+    })
+
+    Stimulus.register("carbon-recap", class extends Controller {
+      static targets = [ "item", "total" ]
+
+      // Sums the result of each line & updates the total
+      updateResult() {
+        let result = 0
+        this.itemTargets.forEach(item => {
+          result += parseInt(item.value)
+        })
+
+        this.totalTarget.innerHTML = result
       }
     })
   </script>
@@ -40,7 +55,7 @@
 
 <body class="container block is-max-desktop ">
 
-  <section class="section">
+  <section class="section" data-controller="carbon-recap">
     <div class="content has-text-centered-desktop pb-6">
         <h1 class="title is-1">Bienvenue sur Carbon Target&nbsp;!</h1>
 
@@ -55,7 +70,11 @@
       <div class="box level-item has-text-centered has-background-primary-light">
          <div>
            <p class="heading">Calcul</p>
-           <p class="title">6,5<span class="is-hidden-tablet">kg</span><span class="is-hidden-mobile">&nbsp;kilos</span></p>
+           <p class="title">
+             <span data-carbon-recap-target="total">0</span>
+             <span class="is-hidden-tablet">kg</span>
+             <span class="is-hidden-mobile">&nbsp;kilos</span>
+           </p>
          </div>
        </div>
       <div class="level-item has-text-centered">
@@ -97,7 +116,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
                 </div>
               </div>
             </div>
@@ -128,7 +147,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
                 </div>
               </div>
             </div>
@@ -163,7 +182,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
                 </div>
               </div>
             </div>
@@ -194,7 +213,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
                 </div>
               </div>
             </div>
