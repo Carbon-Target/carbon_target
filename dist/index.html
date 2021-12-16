@@ -1,112 +1,91 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-
-  <title>Carbon Target</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module">
-    import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
-    window.Stimulus = Application.start()
-
-    Stimulus.register("carbon-item", class extends Controller {
-      static targets = [ "quantity", "frequency", "result" ]
-      static values = { emissionFactor: Number }
-
-      initialize() {
-        this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
-      }
-
-      computeFrequencyFactor() {
-        return this.frequencyHash[this.frequencyTarget.value]
-      }
-
-      updateResult() {
-        let result = this.quantityTarget.value
-          * this.computeFrequencyFactor()
-          * this.emissionFactorValue
-
-        this.resultTarget.value = result || 0
-        this.resultTarget.dispatchEvent(new Event('change'))
-      }
-    })
-
-    Stimulus.register("carbon-recap", class extends Controller {
-      static targets = [ "item", "total" ]
-
-      // Sums the result of each line & updates the total
-      updateResult() {
-        let result = 0
-        this.itemTargets.forEach(item => {
-          result += parseInt(item.value)
-        })
-
-        this.totalTarget.innerHTML = result
-      }
-    })
-  </script>
-
-  <script type="text/javascript" src="javascript.js"></script>
-
-</head>
-
-<body class="container block is-max-desktop ">
-
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="Carbon target bilan carbone giec ademe environnment impact objectifs calcul" name="keywords" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>Carbon Target</title>
+    <link href="style.css" rel="stylesheet" />
+    <script type="module">
+      import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js" window.Stimulus = Application.start() Stimulus.register("carbon-item", class extends Controller {   static targets = [ "quantity", "frequency", "result" ]   static values = { emissionFactor: Number }   initialize() {     this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }   }   computeFrequencyFactor() {     return this.frequencyHash[this.frequencyTarget.value]   }   updateResult() {     let result = this.quantityTarget.value       * this.computeFrequencyFactor()       * this.emissionFactorValue     this.resultTarget.value = result || 0     this.resultTarget.dispatchEvent(new Event('change'))   } }) Stimulus.register("carbon-recap", class extends Controller {   static targets = [ "item", "total" ]   // Sums the result of each line & updates the total   updateResult() {     let result = 0     this.itemTargets.forEach(item => {       result += parseInt(item.value)     })     this.totalTarget.innerHTML = result   } })
+    </script>
+    <script src="javascript.js" type="text/javascript"></script>
+  </head>
+</html>
+<body class="container block is-max-desktop">
   <section class="section" data-controller="carbon-recap">
     <div class="content has-text-centered-desktop pb-6">
-        <h1 class="title is-1">Bienvenue sur Carbon Target&nbsp;!</h1>
-
-        <p>Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?</p>
-
-        <p>Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.</p>
-        <p>Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.</p>
-        <p>Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!</p>
+      <h1 class="title is-1">
+        Bienvenue sur Carbon Target&nbsp;!
+      </h1>
+      <p>
+        Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?
+      </p>
+      <p>
+        Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.
+      </p>
+      <p>
+        Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.
+      </p>
+      <p>
+        Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!
+      </p>
     </div>
-
     <section class="level is-mobile">
       <div class="box level-item has-text-centered has-background-primary-light">
-         <div>
-           <p class="heading">Calcul</p>
-           <p class="title">
-             <span data-carbon-recap-target="total">0</span>
-             <span class="is-hidden-tablet">kg</span>
-             <span class="is-hidden-mobile">&nbsp;kilos</span>
-           </p>
-         </div>
-       </div>
+        <div>
+          <p class="heading">
+            Calcul
+          </p>
+          <p class="title">
+            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">kg</span><span class="is-hidden-mobile">&nbsp;kilos</span>
+          </p>
+        </div>
+      </div>
       <div class="level-item has-text-centered">
-         <div>
-           <p class="heading">VS</p>
-         </div>
-       </div>
-       <div class="box level-item has-text-centered has-background-danger-light">
-         <div>
-           <p class="heading">Cible</p>
-           <p class="title">2<span class="is-hidden-tablet">t</span><span class="is-hidden-mobile">&nbsp;tonnes</span></p>
-         </div>
-       </div>
+        <div>
+          <p class="heading">
+            VS
+          </p>
+        </div>
+      </div>
+      <div class="box level-item has-text-centered has-background-danger-light">
+        <div>
+          <p class="heading">
+            Cible
+          </p>
+          <p class="title">
+            2<span class="is-hidden-tablet">t</span><span class="is-hidden-mobile">&nbsp;tonnes</span>
+          </p>
+        </div>
+      </div>
     </section>
-
     <div class="block">
-      <h2 class="title is-3">Trajets</h2>
+      <h2 class="title is-3">
+        Trajets
+      </h2>
       <ul>
-        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="2">
-          <label for="plane" class="label mt-3">Avion</label>
+        <li data-carbon-item-emission-factor-value="2">
+          <label class="label mt-3" for="plane">avion</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="plane" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
+                  <input class="input" data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="plane" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
-                      <option value="week">/semaine</option>
-                      <option value="month">/mois</option>
-                      <option value="year">/an</option>
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option>
+                        /semaine
+                      </option>
+                      <option>
+                        /mois
+                      </option>
+                      <option>
+                        /an
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -116,28 +95,32 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
                 </div>
               </div>
             </div>
           </div>
         </li>
-
-        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.5">
-          <label for="car" class="label mt-3">Voiture</label>
-
+        <li data-carbon-item-emission-factor-value="1.5">
+          <label class="label mt-3" for="car">voiture</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="car" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
+                  <input class="input" data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="car" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
-                      <option value="week">/semaine</option>
-                      <option value="month">/mois</option>
-                      <option value="year">/an</option>
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option>
+                        /semaine
+                      </option>
+                      <option>
+                        /mois
+                      </option>
+                      <option>
+                        /an
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -147,7 +130,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
                 </div>
               </div>
             </div>
@@ -156,23 +139,30 @@
       </ul>
     </div>
     <div class="block">
-      <h2 class="title is-3">Alimentation</h2>
+      <h2 class="title is-3">
+        Alimentation
+      </h2>
       <ul>
-        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="8">
-          <label for="chicken" class="label mt-3">Poulet</label>
-
+        <li data-carbon-item-emission-factor-value="8">
+          <label class="label mt-3" for="chicken">poulet</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="chicken" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
+                  <input class="input" data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="chicken" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
-                      <option value="week">/semaine</option>
-                      <option value="month">/mois</option>
-                      <option value="year">/an</option>
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option>
+                        /semaine
+                      </option>
+                      <option>
+                        /mois
+                      </option>
+                      <option>
+                        /an
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -182,28 +172,32 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
                 </div>
               </div>
             </div>
           </div>
         </li>
-
-        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="42">
-          <label for="beef" class="label mt-3">Boeuf</label>
-
+        <li data-carbon-item-emission-factor-value="42">
+          <label class="label mt-3" for="beef">boeuf</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="beef" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
+                  <input class="input" data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="beef" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
-                      <option value="week">/semaine</option>
-                      <option value="month">/mois</option>
-                      <option value="year">/an</option>
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option>
+                        /semaine
+                      </option>
+                      <option>
+                        /mois
+                      </option>
+                      <option>
+                        /an
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -213,7 +207,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult" />
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
                 </div>
               </div>
             </div>
@@ -222,7 +216,4 @@
       </ul>
     </div>
   </section>
-
 </body>
-
-</html>

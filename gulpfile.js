@@ -5,6 +5,7 @@ const uglify = require('gulp-uglify');
 const changed = require('gulp-changed');
 const clean = require('gulp-clean');
 // const imagemin = require('gulp-imagemin');
+const slim = require("gulp-slim");
 const browsersync = require('browser-sync').create();
 
 const { series, parallel, watch, src, dest } = require('gulp');
@@ -38,7 +39,7 @@ function javascript(cb) {
 };
 
 function watchFiles() {
-  watch('./src/index.html', index);
+  watch('./src/*.slim', index);
   watch('./src/images/**/*', images);
   watch('./src/css/*', css);
   watch('./src/js/*', javascript);
@@ -46,7 +47,11 @@ function watchFiles() {
 }
 
 function index() {
-  return src('./src/index.html').pipe(dest('./dist/'));
+  return src('./src/index.slim')
+    .pipe(slim({
+      pretty: true
+    }))
+    .pipe(dest('./dist/'));
 }
 
 function fonts() {

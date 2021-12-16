@@ -1,0 +1,26 @@
+label for=send(:[], :id) class="label mt-3"
+  = send(:[], :name)
+
+
+div class="columns is-mobile"
+  div class="column is-three-fifths"
+    div class="field has-addons"
+      div class="control"
+        input id=send(:[], :id) class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity"
+
+      div class="control"
+        div class="select"
+          select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
+            option
+              = "/semaine"
+            option
+              = "/mois"
+            option
+              = "/an"
+
+  div class="column"
+
+  div class="column is-one-fifth"
+    div class="field"
+      div class="control"
+        input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"

@@ -1,0 +1,107 @@
+doctype html
+html
+  head
+
+    meta charset="UTF-8"
+    meta name="keywords" content="Carbon target bilan carbone giec ademe environnment impact objectifs calcul"
+    meta http-equiv="Content-Type" content="text/html; charset=utf-8"
+    meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"
+  
+    title Carbon Target
+
+    link rel="stylesheet" href="style.css"
+
+    script type="module"
+      |  import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+      |  window.Stimulus = Application.start()
+      |
+      |  Stimulus.register("carbon-item", class extends Controller {
+      |    static targets = [ "quantity", "frequency", "result" ]
+      |    static values = { emissionFactor: Number }
+      |
+      |    initialize() {
+      |      this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
+      |    }
+      |
+      |    computeFrequencyFactor() {
+      |      return this.frequencyHash[this.frequencyTarget.value]
+      |    }
+      |
+      |    updateResult() {
+      |      let result = this.quantityTarget.value
+      |        * this.computeFrequencyFactor()
+      |        * this.emissionFactorValue
+      |
+      |      this.resultTarget.value = result || 0
+      |      this.resultTarget.dispatchEvent(new Event('change'))
+      |    }
+      |  })
+      |
+      |  Stimulus.register("carbon-recap", class extends Controller {
+      |    static targets = [ "item", "total" ]
+      |
+      |    // Sums the result of each line & updates the total
+      |    updateResult() {
+      |      let result = 0
+      |      this.itemTargets.forEach(item => {
+      |        result += parseInt(item.value)
+      |      })
+      |
+      |      this.totalTarget.innerHTML = result
+      |    }
+      |  })
+      |
+
+    script type="text/javascript" src="javascript.js"
+
+body class="container block is-max-desktop"
+
+  section class="section" data-controller="carbon-recap"
+    div class="content has-text-centered-desktop pb-6"
+      h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
+
+      p Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?
+
+      p Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.
+
+      p Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.
+      p Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!
+
+    section class="level is-mobile"
+      div class="box level-item has-text-centered has-background-primary-light"
+        div
+          p class="heading" Calcul
+          p class="title"
+            span data-carbon-recap-target="total"
+              = "0"
+            span class="is-hidden-tablet" kg
+            span class="is-hidden-mobile" &nbsp;kilos
+
+
+      div class="level-item has-text-centered"
+        div
+          p class="heading" VS
+      
+      div class="box level-item has-text-centered has-background-danger-light"
+        div
+          p class="heading" Cible
+          p class="title"
+            = "2"
+            span class="is-hidden-tablet" t
+            span class="is-hidden-mobile" &nbsp;tonnes
+
+    div class="block"
+      h2 class="title is-3" Trajets
+      ul
+        li data-carbon-item-emission-factor-value="2"
+          == Slim::Template.new("./src/carbon_item.slim").render(name: "avion", id: "plane")
+        li data-carbon-item-emission-factor-value="1.5"
+          == Slim::Template.new("./src/carbon_item.slim").render(name: "voiture", id: "car")
+
+    div class="block"
+      h2 class="title is-3" Alimentation
+      ul
+        li data-carbon-item-emission-factor-value="8"
+          == Slim::Template.new("./src/carbon_item.slim").render(name: "poulet", id: "chicken")
+        li data-carbon-item-emission-factor-value="42"
+          == Slim::Template.new("./src/carbon_item.slim").render(name: "boeuf", id: "beef")
