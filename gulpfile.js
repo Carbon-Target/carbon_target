@@ -67,4 +67,4 @@ function browserSync() {
 }
 
 exports.watch = parallel(watchFiles, browserSync);
-exports.default = series(clear, parallel(index, legals, fonts, javascript, css, images));
+exports.default = series(clear, parallel(index, fonts, javascript, css, images));
