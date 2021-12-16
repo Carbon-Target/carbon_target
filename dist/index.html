@@ -28,6 +28,9 @@
             * this.computeFrequencyFactor()
             * this.emissionFactorValue
       
+          if (result)
+            result = Math.round(result)
+      
           this.resultTarget.value = result || 0
           this.resultTarget.dispatchEvent(new Event('change'))
         }
@@ -100,28 +103,28 @@
     </section>
     <div class="block">
       <h2 class="title is-3">
-        Trajets
+        Se déplacer
       </h2>
       <ul>
-        <li data-carbon-item-emission-factor-value="2" data-controller="carbon-item">
-          <label class="label mt-3" for="plane">avion</label>
+        <li data-carbon-item-emission-factor-value="0.198" data-controller="carbon-item">
+          <label class="label mt-3" for="car-gas">Voiture essence</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="plane" type="number" />
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="car-gas" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
                     <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
                       <option value="week">
-                        /semaine
+                        km/semaine
                       </option>
                       <option value="month">
-                        /mois
+                        km/mois
                       </option>
                       <option value="year">
-                        /an
+                        km/an
                       </option>
                     </select>
                   </div>
@@ -138,25 +141,200 @@
             </div>
           </div>
         </li>
-        <li data-carbon-item-emission-factor-value="1.5" data-controller="carbon-item">
-          <label class="label mt-3" for="car">voiture</label>
+        <li data-carbon-item-emission-factor-value="0.103" data-controller="carbon-item">
+          <label class="label mt-3" for="car-elec">Voiture électrique</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="car" type="number" />
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="car-elec" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
                     <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
                       <option value="week">
-                        /semaine
+                        km/semaine
                       </option>
                       <option value="month">
-                        /mois
+                        km/mois
                       </option>
                       <option value="year">
-                        /an
+                        km/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.00529" data-controller="carbon-item">
+          <label class="label mt-3" for="train-france">Train France</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="train-france" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        km/semaine
+                      </option>
+                      <option value="month">
+                        km/mois
+                      </option>
+                      <option value="year">
+                        km/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.05" data-controller="carbon-item">
+          <label class="label mt-3" for="train-euro">Train Europe</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="train-euro" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        km/semaine
+                      </option>
+                      <option value="month">
+                        km/mois
+                      </option>
+                      <option value="year">
+                        km/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.808" data-controller="carbon-item">
+          <label class="label mt-3" for="plane-short">Avion court courrier</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="plane-short" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        km/semaine
+                      </option>
+                      <option value="month">
+                        km/mois
+                      </option>
+                      <option value="year">
+                        km/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.589" data-controller="carbon-item">
+          <label class="label mt-3" for="plane-mid">Avion moyen courrier</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="plane-mid" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        km/semaine
+                      </option>
+                      <option value="month">
+                        km/mois
+                      </option>
+                      <option value="year">
+                        km/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.472" data-controller="carbon-item">
+          <label class="label mt-3" for="plane-long">Avion long courrier</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="plane-long" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        km/semaine
+                      </option>
+                      <option value="month">
+                        km/mois
+                      </option>
+                      <option value="year">
+                        km/an
                       </option>
                     </select>
                   </div>
@@ -177,28 +355,28 @@
     </div>
     <div class="block">
       <h2 class="title is-3">
-        Alimentation
+        Se nourrir
       </h2>
       <ul>
-        <li data-carbon-item-emission-factor-value="8" data-controller="carbon-item">
-          <label class="label mt-3" for="chicken">poulet</label>
+        <li data-carbon-item-emission-factor-value="7.26" data-controller="carbon-item">
+          <label class="label mt-3" for="meal-beef">Repas à base de boeuf</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="chicken" type="number" />
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="meal-beef" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
                     <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
                       <option value="week">
-                        /semaine
+                        repas/semaine
                       </option>
                       <option value="month">
-                        /mois
+                        repas/mois
                       </option>
                       <option value="year">
-                        /an
+                        repas/an
                       </option>
                     </select>
                   </div>
@@ -215,25 +393,208 @@
             </div>
           </div>
         </li>
-        <li data-carbon-item-emission-factor-value="42" data-controller="carbon-item">
-          <label class="label mt-3" for="beef">boeuf</label>
+        <li data-carbon-item-emission-factor-value="1.58" data-controller="carbon-item">
+          <label class="label mt-3" for="meal-chicken">Repas à base de poulet</label>
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="beef" type="number" />
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="meal-chicken" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
                     <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
                       <option value="week">
-                        /semaine
+                        repas/semaine
                       </option>
                       <option value="month">
-                        /mois
+                        repas/mois
                       </option>
                       <option value="year">
-                        /an
+                        repas/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.51" data-controller="carbon-item">
+          <label class="label mt-3" for="meal-veg">Repas végétariens</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="meal-veg" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        repas/semaine
+                      </option>
+                      <option value="month">
+                        repas/mois
+                      </option>
+                      <option value="year">
+                        repas/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="block">
+      <h2 class="title is-3">
+        S'équiper
+      </h2>
+      <ul>
+        <li data-carbon-item-emission-factor-value="0.6" data-controller="carbon-item">
+          <label class="label mt-3" for="clothes-new">Vêtements neufs</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="clothes-new" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        €/semaine
+                      </option>
+                      <option value="month">
+                        €/mois
+                      </option>
+                      <option value="year">
+                        €/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.6" data-controller="carbon-item">
+          <label class="label mt-3" for="furniture-new">Meubles neufs</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="furniture-new" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        €/semaine
+                      </option>
+                      <option value="month">
+                        €/mois
+                      </option>
+                      <option value="year">
+                        €/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li data-carbon-item-emission-factor-value="0.4" data-controller="carbon-item">
+          <label class="label mt-3" for="elec-new">Electronique neuf</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="elec-new" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="week">
+                        €/semaine
+                      </option>
+                      <option value="month">
+                        €/mois
+                      </option>
+                      <option value="year">
+                        €/an
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="column"></div>
+            <div class="column is-one-fifth">
+              <div class="field">
+                <div class="control">
+                  <input class="input has-text-centered" data-action="change-&gt;carbon-recap#updateResult" data-carbon-item-target="result" data-carbon-recap-target="item" readonly="readonly" type="number" value="0" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="block">
+      <h2 class="title is-3">
+        Se loger
+      </h2>
+      <ul>
+        <li data-carbon-item-emission-factor-value="5.99" data-controller="carbon-item">
+          <label class="label mt-3" for="clothes-new">Consommation électrique logement</label>
+          <div class="columns is-mobile">
+            <div class="column is-three-fifths">
+              <div class="field has-addons">
+                <div class="control">
+                  <input class="input" data-action="keyup-&gt;carbon-item#updateResult" data-carbon-item-target="quantity" id="clothes-new" type="number" />
+                </div>
+                <div class="control">
+                  <div class="select">
+                    <select data-action="change-&gt;carbon-item#updateResult" data-carbon-item-target="frequency">
+                      <option value="year">
+                        m²
                       </option>
                     </select>
                   </div>
