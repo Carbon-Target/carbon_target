@@ -11,10 +11,18 @@
   
 </head>
 
-<body>
+<body class="container block is-max-desktop ">
 
   <section class="section">
-    <h1 class="title is-1">Carbon Target</h1>
+    <div class="content has-text-centered-desktop pb-6">
+        <h1 class="title is-1">Bienvenue sur Carbon Target&nbsp;!</h1>
+
+        <p>Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?</p>
+
+        <p>Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.</p>
+        <p>Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.</p>
+        <p>Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!</p>
+    </div>
 
     <section class="level is-mobile">
       <div class="box level-item has-text-centered has-background-primary-light">
@@ -31,7 +39,7 @@
        <div class="box level-item has-text-centered has-background-danger-light">
          <div>
            <p class="heading">Cible</p>
-           <p class="title">2<span class="is-hidden-tablet">kg</span><span class="is-hidden-mobile">&nbsp;kilos</span></p>
+           <p class="title">2<span class="is-hidden-tablet">t</span><span class="is-hidden-mobile">&nbsp;tonnes</span></p>
          </div>
        </div>
     </section>
@@ -40,13 +48,13 @@
       <h2 class="title is-3">Trajets</h2>
       <ul>
         <li>
-          <label class="label">Avion</label>
+          <label for="plane" class="label mt-3">Avion</label>
           
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" type="number" />
+                  <input id="plane" class="input" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
@@ -63,7 +71,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
                 </div>
               </div>
             </div>
@@ -71,13 +79,13 @@
         </li>
 
         <li>
-          <label class="label">Voiture</label>
+          <label for="car" class="label mt-3">Voiture</label>
           
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" type="number" />
+                  <input id="car" class="input" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
@@ -94,7 +102,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
                 </div>
               </div>
             </div>
@@ -106,13 +114,13 @@
       <h2 class="title is-3">Alimentation</h2>
       <ul>
         <li>
-          <label class="label">Poulet</label>
+          <label for="chicken" class="label mt-3">Poulet</label>
           
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" type="number" />
+                  <input id="chicken" class="input" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
@@ -129,7 +137,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
                 </div>
               </div>
             </div>
@@ -137,13 +145,13 @@
         </li>
 
         <li>
-          <label class="label">Boeuf</label>
+          <label for="beef" class="label mt-3">Boeuf</label>
           
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input class="input" type="number" />
+                  <input id="beef" class="input" type="number" />
                 </div>
                 <div class="control">
                   <div class="select">
@@ -160,7 +168,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
                 </div>
               </div>
             </div>
