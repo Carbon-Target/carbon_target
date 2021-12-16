@@ -8,7 +8,34 @@
 
   <title>Carbon Target</title>
   <link rel="stylesheet" href="style.css">
-  
+  <script type="module">
+    import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+    window.Stimulus = Application.start()
+
+    Stimulus.register("carbon-item", class extends Controller {
+      static targets = [ "quantity", "frequency", "result" ]
+      static values = { emissionFactor: Number }
+
+      initialize() {
+        this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
+      }
+
+      computeFrequencyFactor() {
+        return this.frequencyHash[this.frequencyTarget.value]
+      }
+
+      updateResult() {
+        let result = this.quantityTarget.value
+          * this.computeFrequencyFactor()
+          * this.emissionFactorValue
+
+        this.resultTarget.value = result || 0
+      }
+    })
+  </script>
+
+  <script type="text/javascript" src="javascript.js"></script>
+
 </head>
 
 <body class="container block is-max-desktop ">
@@ -47,21 +74,20 @@
     <div class="block">
       <h2 class="title is-3">Trajets</h2>
       <ul>
-        <li>
+        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="2">
           <label for="plane" class="label mt-3">Avion</label>
-          
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="plane" class="input" type="number" />
+                  <input id="plane" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select>
-                      <option>/semaine</option>
-                      <option>/mois</option>
-                      <option>/an</option>
+                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
+                      <option value="week">/semaine</option>
+                      <option value="month">/mois</option>
+                      <option value="year">/an</option>
                     </select>
                   </div>
                 </div>
@@ -71,28 +97,28 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
                 </div>
               </div>
             </div>
           </div>
         </li>
 
-        <li>
+        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.5">
           <label for="car" class="label mt-3">Voiture</label>
-          
+
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="car" class="input" type="number" />
+                  <input id="car" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select>
-                      <option>/semaine</option>
-                      <option>/mois</option>
-                      <option>/an</option>
+                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
+                      <option value="week">/semaine</option>
+                      <option value="month">/mois</option>
+                      <option value="year">/an</option>
                     </select>
                   </div>
                 </div>
@@ -102,7 +128,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
                 </div>
               </div>
             </div>
@@ -113,21 +139,21 @@
     <div class="block">
       <h2 class="title is-3">Alimentation</h2>
       <ul>
-        <li>
+        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="8">
           <label for="chicken" class="label mt-3">Poulet</label>
-          
+
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="chicken" class="input" type="number" />
+                  <input id="chicken" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select>
-                      <option>/semaine</option>
-                      <option>/mois</option>
-                      <option>/an</option>
+                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
+                      <option value="week">/semaine</option>
+                      <option value="month">/mois</option>
+                      <option value="year">/an</option>
                     </select>
                   </div>
                 </div>
@@ -137,28 +163,28 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
                 </div>
               </div>
             </div>
           </div>
         </li>
 
-        <li>
+        <li data-controller="carbon-item" data-carbon-item-emission-factor-value="42">
           <label for="beef" class="label mt-3">Boeuf</label>
-          
+
           <div class="columns is-mobile">
             <div class="column is-three-fifths">
               <div class="field has-addons">
                 <div class="control">
-                  <input id="beef" class="input" type="number" />
+                  <input id="beef" class="input" type="number" data-action="change->carbon-item#updateResult" data-carbon-item-target="quantity" />
                 </div>
                 <div class="control">
                   <div class="select">
-                    <select>
-                      <option>/semaine</option>
-                      <option>/mois</option>
-                      <option>/an</option>
+                    <select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult">
+                      <option value="week">/semaine</option>
+                      <option value="month">/mois</option>
+                      <option value="year">/an</option>
                     </select>
                   </div>
                 </div>
@@ -168,7 +194,7 @@
             <div class="column is-one-fifth">
               <div class="field">
                 <div class="control">
-                  <input class="input has-text-centered" type="number" value="42" disabled="disabled" />
+                  <input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" />
                 </div>
               </div>
             </div>
