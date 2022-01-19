@@ -47,11 +47,11 @@ html
         updateResult() {
           let result = 0
           this.itemTargets.forEach(item => {
-            result += parseInt(item.value)
+            result += parseFloat(item.value)
           })
 
            // Convert kg into t
-          result = ((result + 0.0) / 1000).toFixed(2)
+          result = (result / 1000).toFixed(2)
           this.totalTarget.innerHTML = result
 
           if (result < 2.0) {
