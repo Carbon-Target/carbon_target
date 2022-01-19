@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Carbon-Target/carbon_target/issues",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "browser-sync": "^2.27.7",
     "bulma": "^0.9.3",
     "gulp": "^4.0.2",
