@@ -17,6 +17,7 @@ html
 
     javascript [type="module"]:
       import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+
       window.Stimulus = Application.start()
 
       Stimulus.register("carbon-item", class extends Controller {
@@ -121,6 +122,16 @@ html
         }
       })
 
+      Stimulus.register("modal", class extends Controller {
+        click(event) {
+          const mod = document.querySelector(this.element.dataset.modal)
+          mod.classList.add("is-active")
+        }
+        close(event) {
+          this.element.classList.remove("is-active")
+        }
+      })
+
     script type="text/javascript" src="javascript.js"
 
 body class="container block is-max-desktop"
@@ -128,12 +139,28 @@ body class="container block is-max-desktop"
     div class="content has-text-centered-desktop pb-6"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
 
-      p Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?
+      p 
+        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car 
+        a data-controller="modal" data-modal="#calculators" data-action="click->modal#click"
+          | il en existe déjà de très bons
 
-      p Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.
+      p
+        | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de 
+        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#click"
+          | 2 tonnes de CO2
+        |  ?"
 
-      p Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.
-      p Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!
+      p On vous spoile un peu la réponse :
+
+      ol
+        li C'est possible, et ça, c'est une super nouvelle !
+        li
+          | C'est exigeant, nos modes de vie vont devoir 
+          a data-controller="modal" data-modal="#change" data-action="click->modal#click"
+            | changer radicalement à tous les niveaux
+          | .
+
+      p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
 
     section class="level is-mobile"
       div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
@@ -144,7 +171,6 @@ body class="container block is-max-desktop"
               = "0.00"
             span class="is-hidden-tablet" t
             span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
-
 
       div class="level-item has-text-centered"
         div
@@ -233,3 +259,5 @@ body class="container block is-max-desktop"
 
       p class="has-text-centered-desktop"
        | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
+
+  == Slim::Template.new("./src/modals.slim").render()
