@@ -42,7 +42,7 @@
       
       Stimulus.register("carbon-recap", class extends Controller {
         static targets = [ "item", "total", "box", "unit" ]
-        static classes = [ "targetOverpass", "targetCompliant" ]
+        static classes = [ "aboveTarget", "belowTarget" ]
       
         connect() {
           this.updateBoxColor(0);
@@ -69,11 +69,11 @@
       
         updateBoxColor(result) {
           if (result <= 2) {
-            this.boxTarget.classList.remove(this.targetOverpassClass)
-            this.boxTarget.classList.add(this.targetCompliantClass)
+            this.boxTarget.classList.remove(this.aboveTargetClass)
+            this.boxTarget.classList.add(this.belowTargetClass)
           } else {
-            this.boxTarget.classList.remove(this.targetCompliantClass)
-            this.boxTarget.classList.add(this.targetOverpassClass)
+            this.boxTarget.classList.remove(this.belowTargetClass)
+            this.boxTarget.classList.add(this.aboveTargetClass)
           }
         }
       })
@@ -82,7 +82,7 @@
   </head>
 </html>
 <body class="container block is-max-desktop">
-  <section class="section" data-carbon-recap-target-compliant-class="has-background-primary-light" data-carbon-recap-target-overpass-class="has-background-danger-light" data-controller="carbon-recap">
+  <section class="section" data-carbon-recap-above-target-class="has-background-danger-light" data-carbon-recap-below-target-class="has-background-primary-light" data-controller="carbon-recap">
     <div class="content has-text-centered-desktop pb-6">
       <h1 class="title is-1">
         Bienvenue sur Carbon Target&nbsp;!
