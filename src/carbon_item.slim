@@ -6,24 +6,27 @@ div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile
     div.field.has-addons
       div.control
-        input.input id=send(:[], :id) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
+        input.input.is-size-7-mobile id=send(:[], :id) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
 
       div.control
-        div.select
-          select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-            option*{ value: "week", selected: send(:[], :frequency) == "week" }
-              = "#{send(:[], :unit)}/sem"
-            option*{ value: "month", selected: send(:[], :frequency) == "month" }
-              = "#{send(:[], :unit)}/mois"
-            option*{ value: "year", selected: send(:[], :frequency) == "year" }
-              = "#{send(:[], :unit)}/an"
+        div.select.unit-select
+          select.is-size-7-mobile data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
+            - unless send(:[], :no_week)
+              option*{ value: "week", selected: send(:[], :frequency) == "week" }
+                = "#{send(:[], :unit)}#{ '/sem' unless send(:[], :no_time_unit) }"
+            - unless send(:[], :no_month)
+              option*{ value: "month", selected: send(:[], :frequency) == "month" }
+                = "#{send(:[], :unit)}#{ '/mois' unless send(:[], :no_time_unit) }"
+            - unless send(:[], :no_year)
+              option*{ value: "year", selected: send(:[], :frequency) == "year" }
+                = "#{send(:[], :unit)}#{ '/an' unless send(:[], :no_time_unit) }"
 
   div.column.is-one-third-tablet.is-half-mobile
     div.columns.is-vcentered.is-mobile
-      div.column.control.is-three-quarters-tablet.is-three-quarters-mobile
+      div.column.control.is-three-quarters-tablet.is-two-thirds-mobile
         div.field
-          input.input.has-text-centered type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
-      div.column.is-one-quarter-tablet.is-one-quarter-mobile.has-text-right.result-unit
+          input.input.has-text-centered.is-size-7-mobile type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+      div.column.is-one-quarter-tablet.is-one-third-mobile.has-text-right.is-size-7-mobile
         span
           = "kgCO"
           sub = "2"
