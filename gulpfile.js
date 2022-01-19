@@ -17,7 +17,7 @@ function clear() {
 }
 
 function css(cb) {
-  const source = 'src/css/*.scss';
+  const source = 'src/css/*.sass';
 
   return src(source)
     .pipe(changed(source))
