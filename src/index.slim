@@ -167,19 +167,19 @@ body class="container block is-max-desktop"
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.198"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture essence", id: "car-gas", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture essence", id: "car-gas", unit: "km", frequency: "month" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.103"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture électrique", id: "car-elec", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture électrique", id: "car-elec", unit: "km", frequency: "month" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.00529"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train France", id: "train-france", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train France", id: "train-france", unit: "km", frequency: "month" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.05"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train Europe", id: "train-euro", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train Europe", id: "train-euro", unit: "km", frequency: "month" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.808"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion court courrier", id: "plane-short", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion court courrier", id: "plane-short", unit: "km", frequency: "year" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.589"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion moyen courrier", id: "plane-mid", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion moyen courrier", id: "plane-mid", unit: "km", frequency: "year" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.472"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion long courrier", id: "plane-long", unit: "km" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion long courrier", id: "plane-long", unit: "km", frequency: "year" })
 
     div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
@@ -205,11 +205,11 @@ body class="container block is-max-desktop"
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€", frequency: "month" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€", frequency: "year" })
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€" })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year" })
 
     div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
@@ -250,4 +250,3 @@ body class="container block is-max-desktop"
 
       p class="has-text-centered-desktop"
        | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
-  
