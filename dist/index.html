@@ -37,7 +37,7 @@
       })
       
       Stimulus.register("carbon-recap", class extends Controller {
-        static targets = [ "item", "total" ]
+        static targets = [ "item", "total", "unit" ]
       
         // Sums the result of each line & updates the total
         updateResult() {
@@ -46,7 +46,15 @@
             result += parseInt(item.value)
           })
       
+           // Convert kg into t
+          result = ((result + 0.0) / 1000).toFixed(2)
           this.totalTarget.innerHTML = result
+      
+          if (result < 2.0) {
+            this.unitTarget.innerHTML = "&nbsp;tonne"
+          } else {
+            this.unitTarget.innerHTML = "&nbsp;tonnes"
+          }
         }
       })
     </script>
@@ -79,7 +87,7 @@
             Calcul
           </p>
           <p class="title">
-            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">kg</span><span class="is-hidden-mobile">&nbsp;kilos</span>
+            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonnes</span>
           </p>
         </div>
       </div>
