@@ -44,6 +44,10 @@
         static targets = [ "item", "total", "box", "unit" ]
         static classes = [ "aboveTarget", "belowTarget" ]
       
+        initialize() {
+          this.carbonTarget = 2.0
+        }
+      
         connect() {
           this.updateBoxColor(0);
         }
@@ -59,16 +63,20 @@
           result = (result / 1000).toFixed(2)
           this.totalTarget.innerHTML = result
       
-          if (result < 2.0) {
+          this.updateUnit(result);
+          this.updateBoxColor(result);
+        }
+      
+        updateUnit(result) {
+          if (result < this.carbonTarget) {
             this.unitTarget.innerHTML = "&nbsp;tonne"
           } else {
             this.unitTarget.innerHTML = "&nbsp;tonnes"
           }
-          this.updateBoxColor(result);
         }
       
         updateBoxColor(result) {
-          if (result <= 2) {
+          if (result <= this.carbonTarget) {
             this.boxTarget.classList.remove(this.aboveTargetClass)
             this.boxTarget.classList.add(this.belowTargetClass)
           } else {
@@ -107,7 +115,7 @@
             Calcul
           </p>
           <p class="title">
-            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonnes</span>
+            <span data-carbon-recap-target="total">0.00</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonne</span>
           </p>
         </div>
       </div>
