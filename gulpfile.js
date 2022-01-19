@@ -61,7 +61,8 @@ function fonts() {
 function images() {
   return src('./src/images/**/*')
     // .pipe(imagemin())
-    .pipe(dest('./dist/images'));
+    .pipe(dest('./dist/images'))
+    .pipe(browsersync.stream());
 }
 
 function browserSync() {
