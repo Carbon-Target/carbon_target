@@ -11,11 +11,11 @@ div class="columns is-mobile"
       div class="control"
         div class="select"
           select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-            option value="week"
+            option*{ value: "week", selected: send(:[], :frequency) == "week" }
               = "#{send(:[], :unit)}/semaine"
-            option value="month"
+            option*{ value: "month", selected: send(:[], :frequency) == "month" }
               = "#{send(:[], :unit)}/mois"
-            option value="year"
+            option*{ value: "year", selected: send(:[], :frequency) == "year" }
               = "#{send(:[], :unit)}/an"
 
   div class="column"
