@@ -1,26 +1,29 @@
-label for=send(:[], :id) class="label mt-3"
+label.label.mt-3 for=send(:[], :id)
   = send(:[], :name)
 
 
-div class="columns is-mobile"
-  div class="column is-three-fifths"
-    div class="field has-addons"
-      div class="control"
-        input id=send(:[], :id) class="input" type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
+div.columns.is-mobile
+  div.column.is-two-thirds-tablet.is-half-mobile
+    div.field.has-addons
+      div.control
+        input.input id=send(:[], :id) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
 
-      div class="control"
-        div class="select"
+      div.control
+        div.select
           select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
             option*{ value: "week", selected: send(:[], :frequency) == "week" }
-              = "#{send(:[], :unit)}/semaine"
+              = "#{send(:[], :unit)}/sem"
             option*{ value: "month", selected: send(:[], :frequency) == "month" }
               = "#{send(:[], :unit)}/mois"
             option*{ value: "year", selected: send(:[], :frequency) == "year" }
               = "#{send(:[], :unit)}/an"
 
-  div class="column"
-
-  div class="column is-one-fifth"
-    div class="field"
-      div class="control"
-        input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+  div.column.is-one-third-tablet.is-half-mobile
+    div.columns.is-vcentered.is-mobile
+      div.column.control.is-three-quarters-tablet.is-three-quarters-mobile
+        div.field
+          input.input.has-text-centered type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+      div.column.is-one-quarter-tablet.is-one-quarter-mobile.has-text-right.result-unit
+        span
+          = "kgCO"
+          sub = "2"
