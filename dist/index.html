@@ -37,16 +37,24 @@
       })
       
       Stimulus.register("carbon-recap", class extends Controller {
-        static targets = [ "item", "total" ]
+        static targets = [ "item", "total", "unit" ]
       
         // Sums the result of each line & updates the total
         updateResult() {
           let result = 0
           this.itemTargets.forEach(item => {
-            result += parseInt(item.value)
+            result += parseFloat(item.value)
           })
       
+           // Convert kg into t
+          result = (result / 1000).toFixed(2)
           this.totalTarget.innerHTML = result
+      
+          if (result < 2.0) {
+            this.unitTarget.innerHTML = "&nbsp;tonne"
+          } else {
+            this.unitTarget.innerHTML = "&nbsp;tonnes"
+          }
         }
       })
     </script>
@@ -79,7 +87,7 @@
             Calcul
           </p>
           <p class="title">
-            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">kg</span><span class="is-hidden-mobile">&nbsp;kilos</span>
+            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonnes</span>
           </p>
         </div>
       </div>
@@ -612,6 +620,16 @@
           </div>
         </li>
       </ul>
+    </div>
+  </section>
+  <section class="section">
+    <div class="content has-text-centered-desktop pb-6">
+      <p class="has-text-centered-desktop">
+        Carbon Target est un projet citoyen open source qui se base sur les données de l&#39;ADEME (Bilan GES). Il s&#39;agit pour l&#39;instant d&#39;un MVP basique et largement améliorable, qui a pour objectif de lancer une dynamique. En effet, nous serions ravis que des initiatives ou des institutions plus grandes et plus légitimes que nous (Shift Project, Datagir.Ademe.fr, Convention des Entreprises pour le Climat, MyCO2 by Carbone 4, Atelier 2 tonnes, …) aient envie de s&#39;approprier cette idée simple pour la faire vivre et lui donner une autre dimension.
+      </p>
+      <p class="has-text-centered-desktop">
+        Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
+      </p>
     </div>
   </section>
 </body>
