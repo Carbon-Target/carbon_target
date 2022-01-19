@@ -41,7 +41,16 @@
       })
       
       Stimulus.register("carbon-recap", class extends Controller {
-        static targets = [ "item", "total", "unit" ]
+        static targets = [ "item", "total", "box", "unit" ]
+        static classes = [ "aboveTarget", "belowTarget" ]
+      
+        initialize() {
+          this.carbonTarget = 2.0
+        }
+      
+        connect() {
+          this.updateBoxColor(0);
+        }
       
         // Sums the result of each line & updates the total
         updateResult() {
@@ -54,10 +63,25 @@
           result = (result / 1000).toFixed(2)
           this.totalTarget.innerHTML = result
       
-          if (result < 2.0) {
+          this.updateUnit(result);
+          this.updateBoxColor(result);
+        }
+      
+        updateUnit(result) {
+          if (result < this.carbonTarget) {
             this.unitTarget.innerHTML = "&nbsp;tonne"
           } else {
             this.unitTarget.innerHTML = "&nbsp;tonnes"
+          }
+        }
+      
+        updateBoxColor(result) {
+          if (result <= this.carbonTarget) {
+            this.boxTarget.classList.remove(this.aboveTargetClass)
+            this.boxTarget.classList.add(this.belowTargetClass)
+          } else {
+            this.boxTarget.classList.remove(this.belowTargetClass)
+            this.boxTarget.classList.add(this.aboveTargetClass)
           }
         }
       })
@@ -66,7 +90,7 @@
   </head>
 </html>
 <body class="container block is-max-desktop">
-  <section class="section" data-controller="carbon-recap">
+  <section class="section" data-carbon-recap-above-target-class="has-background-danger-light" data-carbon-recap-below-target-class="has-background-primary-light" data-controller="carbon-recap">
     <div class="content has-text-centered-desktop pb-6">
       <h1 class="title is-1">
         Bienvenue sur Carbon Target&nbsp;!
@@ -85,13 +109,13 @@
       </p>
     </div>
     <section class="level is-mobile">
-      <div class="box level-item has-text-centered has-background-primary-light">
+      <div class="box level-item has-text-centered" data-carbon-recap-target="box">
         <div>
           <p class="heading">
             Calcul
           </p>
           <p class="title">
-            <span data-carbon-recap-target="total">0</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonnes</span>
+            <span data-carbon-recap-target="total">0.00</span><span class="is-hidden-tablet">t</span><span class="is-hidden-mobile" data-carbon-recap-target="unit">&nbsp;tonne</span>
           </p>
         </div>
       </div>
@@ -102,7 +126,7 @@
           </p>
         </div>
       </div>
-      <div class="box level-item has-text-centered has-background-danger-light">
+      <div class="box level-item has-text-centered has-background-primary-light">
         <div>
           <p class="heading">
             Cible
