@@ -17,6 +17,7 @@ html
 
     javascript [type="module"]:
       import { Application, Controller } from "https://unpkg.com/@hotwired/stimulus/dist/stimulus.js"
+
       window.Stimulus = Application.start()
 
       Stimulus.register("carbon-item", class extends Controller {
@@ -121,6 +122,16 @@ html
         }
       })
 
+      Stimulus.register("modal", class extends Controller {
+        click(event) {
+          const mod = document.querySelector(this.element.dataset.modal)
+          mod.classList.add("is-active")
+        }
+        close(event) {
+          this.element.classList.remove("is-active")
+        }
+      })
+
     script type="text/javascript" src="javascript.js"
 
 body class="container block is-max-desktop"
@@ -128,12 +139,61 @@ body class="container block is-max-desktop"
     div class="content has-text-centered-desktop pb-6"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
 
-      p Une vie à 2 tonnes, qu'est ce que ça veut dire concrètement&nbsp;?
+      p 
+        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car 
+        a data-controller="modal" data-modal="#calculators" data-action="click->modal#click"
+          | il en existe déjà de très bons
+      div#calculators.modal data-controller="modal"
+        div.modal-background data-action="click->modal#close"
+        div.modal-content
+          div.box
+            | Si ce n'est pas encore fait, courrez calculer la vôtre sur
+            a href="https://nosgestesclimat.fr/" target="_blank"
+              |  Nos Gestes Climat
+            |  par l'ADEME ou 
+            a href="https://www.myco2.fr/fr/" target="_blank"
+              |  MyCO2
+            |  par Carbone4.
+        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
 
-      p Ce projet a pour but d'illustrer la nécessaire radicalité du changement de nos modes de vie à tous les niveaux.
 
-      p Le calcul ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc bien évidemment pas exhaustif.
-      p Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!
+      p
+        | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de 
+        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#click"
+          | 2 tonnes de CO2
+        |  ?"
+      div#twotonnes.modal data-controller="modal"
+        div.modal-background data-action="click->modal#close"
+        div.modal-content
+          div.box
+            |  2 tonnes de CO2 par an et par personne, c'est le
+            a href="https://datagir.ademe.fr/blog/budget-empreinte-carbone-c-est-quoi/" target="_blank"
+              |  maximum pour avoir un monde soutenable
+            | , alors que l'empreinte carbone moyenne des français est actuellement de
+            a href="https://www.myco2.fr/fr/empreinte-carbone-francaise-moyenne-comment-est-elle-calculee/" target="_blank"
+              |  9,9 tonnes
+            | .
+        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+      p On vous spoile un peu la réponse :
+
+      ol
+        li C'est possible, et ça, c'est une super nouvelle !
+        li
+          | C'est exigeant, nos modes de vie vont devoir 
+          a data-controller="modal" data-modal="#change" data-action="click->modal#click"
+            | changer radicalement à tous les niveaux
+          | .
+      div#change.modal data-controller="modal"
+        div.modal-background data-action="click->modal#close"
+        div.modal-content
+          div.box
+            |  Ca ne se fera évidemment pas en 1 an mais il faut s'y mettre dès maintenant ! C'est aussi l'occasion d'en profiter pour
+            a href="https://www.notre-planete.info/actualites/4625-Pierre-Rabhi-vers-la-sobriete-heureuse" target="_blank"
+              |  questionner ce qui fait vraiment notre bonheur et notre épanouissement
+            | .
+        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+      p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
 
     section class="level is-mobile"
       div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
