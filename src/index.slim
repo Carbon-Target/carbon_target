@@ -44,7 +44,7 @@ html
         }
       })
 
-      Stimulus.register("carbon-recap", class extends Controller {
+      Stimulus.register("carbon-main-recap", class extends Controller {
         static targets = [ "item", "total", "box", "unit" ]
         static classes = [ "aboveTarget", "belowTarget" ]
 
@@ -57,10 +57,10 @@ html
         }
 
         // Sums the result of each line & updates the total
-        updateResult() {
+        updateResult(items) {
           let result = 0
           this.itemTargets.forEach(item => {
-            result += parseFloat(item.value)
+            result += parseFloat(item.innerHTML)
           })
 
            // Convert kg into t
@@ -80,6 +80,7 @@ html
         }
 
         updateBoxColor(result) {
+          if (!this.hasBoxTarget) { return }
           if (result <= this.carbonTarget) {
             this.boxTarget.classList.remove(this.aboveTargetClass)
             this.boxTarget.classList.add(this.belowTargetClass)
@@ -90,10 +91,40 @@ html
         }
       })
 
+      Stimulus.register("carbon-recap", class extends Controller {
+        static targets = [ "item", "total", "box", "unit" ]
+
+        initialize() {
+          this.carbonTarget = 2.0
+        }
+
+        // Sums the result of each line & updates the total
+        updateResult() {
+          let result = 0
+          this.itemTargets.forEach(item => {
+            result += parseFloat(item.value)
+          })
+
+          result = result
+          this.totalTarget.innerHTML = result
+
+          this.updateUnit(result);
+          this.dispatch("updateResult")
+        }
+
+        updateUnit(result) {
+          if (result < this.carbonTarget) {
+            this.unitTarget.innerHTML = "&nbsp;kilo"
+          } else {
+            this.unitTarget.innerHTML = "&nbsp;kilos"
+          }
+        }
+      })
+
     script type="text/javascript" src="javascript.js"
 
 body class="container block is-max-desktop"
-  section class="section" data-controller="carbon-recap" data-carbon-recap-below-target-class="has-background-primary-light" data-carbon-recap-above-target-class="has-background-danger-light"
+  section class="section" data-controller="carbon-main-recap" data-carbon-main-recap-below-target-class="has-background-primary-light" data-carbon-main-recap-above-target-class="has-background-danger-light"
     div class="content has-text-centered-desktop pb-6"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
 
@@ -105,14 +136,14 @@ body class="container block is-max-desktop"
       p Mais sans être exhaustif, vous verrez que c'est déjà loin d'être évident de tenir le fameux objectif des 2 tonnes&nbsp;!
 
     section class="level is-mobile"
-      div class="box level-item has-text-centered" data-carbon-recap-target="box"
+      div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
         div
           p class="heading" Calcul
           p class="title"
-            span data-carbon-recap-target="total"
+            span data-carbon-main-recap-target="total"
               = "0.00"
             span class="is-hidden-tablet" t
-            span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;tonne
+            span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
 
       div class="level-item has-text-centered"
@@ -127,8 +158,13 @@ body class="container block is-max-desktop"
             span class="is-hidden-tablet" t
             span class="is-hidden-mobile" &nbsp;tonnes
 
-    div class="block"
-      h2 class="title is-3" Se déplacer
+    div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
+        | Se déplacer
+        span
+          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+          span class="is-hidden-tablet" kg
+          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.198"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture essence", id: "car-gas", unit: "km" })
@@ -145,8 +181,13 @@ body class="container block is-max-desktop"
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.472"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion long courrier", id: "plane-long", unit: "km" })
 
-    div class="block"
-      h2 class="title is-3" Se nourrir
+    div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
+        | Se nourrir
+        span
+          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+          span class="is-hidden-tablet" kg
+          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="7.26"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de boeuf", id: "meal-beef", unit: "repas" })
@@ -155,8 +196,13 @@ body class="container block is-max-desktop"
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.51"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas" })
 
-    div class="block"
-      h2 class="title is-3" S'équiper
+    div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
+        | S'équiper
+        span
+          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+          span class="is-hidden-tablet" kg
+          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€" })
@@ -165,8 +211,13 @@ body class="container block is-max-desktop"
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€" })
 
-    div class="block"
-      h2 class="title is-3" Se loger
+    div class="block" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between"
+        | Se loger
+        span
+          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+          span class="is-hidden-tablet" kg
+          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="5.99"
           label for="clothes-new" class="label mt-3"
