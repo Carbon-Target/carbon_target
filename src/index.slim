@@ -143,37 +143,12 @@ body class="container block is-max-desktop"
         | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car 
         a data-controller="modal" data-modal="#calculators" data-action="click->modal#click"
           | il en existe déjà de très bons
-      div#calculators.modal data-controller="modal"
-        div.modal-background data-action="click->modal#close"
-        div.modal-content
-          div.box
-            | Si ce n'est pas encore fait, courrez calculer la vôtre sur
-            a href="https://nosgestesclimat.fr/" target="_blank"
-              |  Nos Gestes Climat
-            |  par l'ADEME ou 
-            a href="https://www.myco2.fr/fr/" target="_blank"
-              |  MyCO2
-            |  par Carbone4.
-        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
-
 
       p
         | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de 
         a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#click"
           | 2 tonnes de CO2
         |  ?"
-      div#twotonnes.modal data-controller="modal"
-        div.modal-background data-action="click->modal#close"
-        div.modal-content
-          div.box
-            |  2 tonnes de CO2 par an et par personne, c'est le
-            a href="https://datagir.ademe.fr/blog/budget-empreinte-carbone-c-est-quoi/" target="_blank"
-              |  maximum pour avoir un monde soutenable
-            | , alors que l'empreinte carbone moyenne des français est actuellement de
-            a href="https://www.myco2.fr/fr/empreinte-carbone-francaise-moyenne-comment-est-elle-calculee/" target="_blank"
-              |  9,9 tonnes
-            | .
-        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
 
       p On vous spoile un peu la réponse :
 
@@ -184,15 +159,7 @@ body class="container block is-max-desktop"
           a data-controller="modal" data-modal="#change" data-action="click->modal#click"
             | changer radicalement à tous les niveaux
           | .
-      div#change.modal data-controller="modal"
-        div.modal-background data-action="click->modal#close"
-        div.modal-content
-          div.box
-            |  Ca ne se fera évidemment pas en 1 an mais il faut s'y mettre dès maintenant ! C'est aussi l'occasion d'en profiter pour
-            a href="https://www.notre-planete.info/actualites/4625-Pierre-Rabhi-vers-la-sobriete-heureuse" target="_blank"
-              |  questionner ce qui fait vraiment notre bonheur et notre épanouissement
-            | .
-        button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
       p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
 
     section class="level is-mobile"
@@ -204,7 +171,6 @@ body class="container block is-max-desktop"
               = "0.00"
             span class="is-hidden-tablet" t
             span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
-
 
       div class="level-item has-text-centered"
         div
@@ -293,3 +259,5 @@ body class="container block is-max-desktop"
 
       p class="has-text-centered-desktop"
        | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
+
+  == Slim::Template.new("./src/modals.slim").render()

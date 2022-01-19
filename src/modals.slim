@@ -1,0 +1,33 @@
+div#twotonnes.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      |  2 tonnes de CO2 par an et par personne, c'est le
+      a href="https://datagir.ademe.fr/blog/budget-empreinte-carbone-c-est-quoi/" target="_blank"
+        |  maximum pour avoir un monde soutenable
+      | , alors que l'empreinte carbone moyenne des français est actuellement de
+      a href="https://www.myco2.fr/fr/empreinte-carbone-francaise-moyenne-comment-est-elle-calculee/" target="_blank"
+        |  9,9 tonnes
+      | .
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+div#change.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      |  Ca ne se fera évidemment pas en 1 an mais il faut s'y mettre dès maintenant ! C'est aussi l'occasion d'en profiter pour
+      a href="https://www.notre-planete.info/actualites/4625-Pierre-Rabhi-vers-la-sobriete-heureuse" target="_blank"
+        |  questionner ce qui fait vraiment notre bonheur et notre épanouissement
+      | .
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+div#calculators.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      | Si ce n'est pas encore fait, courrez calculer la vôtre sur
+      a href="https://nosgestesclimat.fr/" target="_blank"
+        |  Nos Gestes Climat
+      |  par l'ADEME ou 
+      a href="https://www.myco2.fr/fr/" target="_blank"
+        |  MyCO2
+      |  par Carbone4.
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
