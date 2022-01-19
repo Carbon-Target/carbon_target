@@ -44,6 +44,7 @@ function watchFiles() {
   watch('./src/images/**/*', images);
   watch('./src/css/*', css);
   watch('./src/img/*', images);
+  watch('./src/webfonts/*', icons);
 }
 
 function index() {
@@ -65,6 +66,11 @@ function images() {
     .pipe(browsersync.stream());
 }
 
+function icons() {
+  return src('node_modules/@fortawesome/fontawesome-free/webfonts/*')
+    .pipe(dest('./dist/webfonts'));
+}
+
 function browserSync() {
   browsersync.init({
     server: { baseDir: './dist' },
@@ -73,4 +79,4 @@ function browserSync() {
 }
 
 exports.watch = parallel(watchFiles, browserSync);
-exports.default = series(clear, parallel(index, fonts, javascript, css, images));
+exports.default = series(clear, parallel(index, fonts, javascript, css, images, icons));
