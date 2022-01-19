@@ -57,7 +57,7 @@ html
         }
 
         // Sums the result of each line & updates the total
-        updateResult(items) {
+        updateResult() {
           let result = 0
           this.itemTargets.forEach(item => {
             result += parseFloat(item.innerHTML)
