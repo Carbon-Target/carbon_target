@@ -218,30 +218,10 @@ body class="container block is-max-desktop"
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+
       ul
         li data-controller="carbon-item" data-carbon-item-emission-factor-value="5.99"
-          label for="clothes-new" class="label mt-3"
-            = "Consommation électrique logement"
-
-
-          div class="columns is-mobile"
-            div class="column is-three-fifths"
-              div class="field has-addons"
-                div class="control"
-                  input id="clothes-new" class="input" type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
-
-                div class="control"
-                  div class="select"
-                    select data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-                      option value="year"
-                        = "m²"
-
-            div class="column"
-
-            div class="column is-one-fifth"
-              div class="field"
-                div class="control"
-                  input class="input has-text-centered" type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation électrique logement", id: "electricity", unit: "m²", frequency: "year", no_week: true, no_month: true, no_time_unit: true })
 
   section class="section"
     div class="content has-text-centered-desktop pb-6"

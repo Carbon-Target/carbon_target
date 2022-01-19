@@ -11,12 +11,15 @@ div.columns.is-mobile
       div.control
         div.select.unit-select
           select.is-size-7-mobile data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-            option*{ value: "week", selected: send(:[], :frequency) == "week" }
-              = "#{send(:[], :unit)}/sem"
-            option*{ value: "month", selected: send(:[], :frequency) == "month" }
-              = "#{send(:[], :unit)}/mois"
-            option*{ value: "year", selected: send(:[], :frequency) == "year" }
-              = "#{send(:[], :unit)}/an"
+            - unless send(:[], :no_week)
+              option*{ value: "week", selected: send(:[], :frequency) == "week" }
+                = "#{send(:[], :unit)}#{ '/sem' unless send(:[], :no_time_unit) }"
+            - unless send(:[], :no_month)
+              option*{ value: "month", selected: send(:[], :frequency) == "month" }
+                = "#{send(:[], :unit)}#{ '/mois' unless send(:[], :no_time_unit) }"
+            - unless send(:[], :no_year)
+              option*{ value: "year", selected: send(:[], :frequency) == "year" }
+                = "#{send(:[], :unit)}#{ '/an' unless send(:[], :no_time_unit) }"
 
   div.column.is-one-third-tablet.is-half-mobile
     div.columns.is-vcentered.is-mobile
