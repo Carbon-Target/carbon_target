@@ -123,10 +123,11 @@ html
       })
 
       Stimulus.register("modal", class extends Controller {
-        click(event) {
+        open(event) {
           const mod = document.querySelector(this.element.dataset.modal)
           mod.classList.add("is-active")
         }
+
         close(event) {
           this.element.classList.remove("is-active")
         }
@@ -155,14 +156,14 @@ body class="container block is-max-desktop"
 
       p
         | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car
-        a data-controller="modal" data-modal="#calculators" data-action="click->modal#click"
-          | il en existe déjà de très bons
+        a data-controller="modal" data-modal="#calculators" data-action="click->modal#open"
+          |  il en existe déjà de très bons
         |  !
 
       p
         | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de
-        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#click"
-          | 2 tonnes de CO2
+        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#open"
+          |  2 tonnes de CO2
         |  ?"
 
       p On vous spoile un peu la réponse :
@@ -171,8 +172,8 @@ body class="container block is-max-desktop"
         li C'est possible, et ça, c'est une super nouvelle !
         li
           | C'est exigeant, nos modes de vie vont devoir
-          a data-controller="modal" data-modal="#change" data-action="click->modal#click"
-            | changer radicalement à tous les niveaux
+          a data-controller="modal" data-modal="#change" data-action="click->modal#open"
+            |  changer radicalement à tous les niveaux
           | .
 
       p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
