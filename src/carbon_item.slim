@@ -1,5 +1,8 @@
 label.label.mt-3 for=send(:[], :id)
   = send(:[], :name)
+  a data-controller="modal" data-modal="#modal-#{send(:[], :id)}" data-action="click->modal#open"
+    |  ⓘ
+    
 
 
 div.columns.is-mobile
