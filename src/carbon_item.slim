@@ -3,26 +3,17 @@ label.label.mt-3 for=send(:[], :id)
   a data-controller="modal" data-modal="#modal-#{send(:[], :id)}" data-action="click->modal#open"
     |  ⓘ
     
-
+- frequencies = { day: "jr", week: "sem", month: "mois", year: "an" }
 
 div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile
-    div.field.has-addons
-      div.control
+    div.columns.field.has-addons.is-vcentered
+      div.control.column
         input.input.is-size-7-mobile id=send(:[], :id) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
 
-      div.control
-        div.select.unit-select
-          select.is-size-7-mobile data-carbon-item-target="frequency" data-action="change->carbon-item#updateResult"
-            - unless send(:[], :no_week)
-              option*{ value: "week", selected: send(:[], :frequency) == "week" }
-                = "#{send(:[], :unit)}#{ '/sem' unless send(:[], :no_time_unit) }"
-            - unless send(:[], :no_month)
-              option*{ value: "month", selected: send(:[], :frequency) == "month" }
-                = "#{send(:[], :unit)}#{ '/mois' unless send(:[], :no_time_unit) }"
-            - unless send(:[], :no_year)
-              option*{ value: "year", selected: send(:[], :frequency) == "year" }
-                = "#{send(:[], :unit)}#{ '/an' unless send(:[], :no_time_unit) }"
+      div.control.column
+        span
+          = "#{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
 
   div.column.is-one-third-tablet.is-half-mobile
     div.columns.is-vcentered.is-mobile
