@@ -20,6 +20,21 @@ html
 
       window.Stimulus = Application.start()
 
+      Stimulus.register("slider", class extends Controller {
+        static targets = [ "range", "label", "value" ]
+
+        connect() {
+          setTimeout(function() {
+            this.updateLabelPosition()
+          }.bind(this), 1000)
+        }
+
+        updateLabelPosition() {
+          this.valueTarget.innerHTML = this.rangeTarget.value
+          this.labelTarget.style.left = `calc(${this.rangeTarget.value}% - ${this.labelTarget.clientWidth}px / 2)`
+        }
+      })
+
       Stimulus.register("carbon-item", class extends Controller {
         static targets = [ "quantity", "result" ]
         static values = { emissionFactor: Number, frequency: String }
@@ -148,6 +163,17 @@ html
           this.listTarget.classList.toggle("is-hidden")
           this.angleDownTarget.classList.toggle("is-hidden")
           this.angleUpTarget.classList.toggle("is-hidden")
+
+          this.dispatchToSliders()
+        }
+
+        dispatchToSliders() {
+          if (!this.listTarget.classList.contains("is-hidden")) {
+            this.element.querySelectorAll(".slider").forEach((e) => {
+              const sliderControlers = this.application.getControllerForElementAndIdentifier(e, 'slider')
+              sliderControlers.updateLabelPosition()
+            })
+          }
         }
       })
 
