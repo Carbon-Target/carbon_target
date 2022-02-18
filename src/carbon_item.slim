@@ -8,18 +8,31 @@ label.label.mt-3 for=send(:[], :id)
 div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile
     div.columns.field.has-addons.is-vcentered
-      div.control.column
-        input.input.is-size-7-mobile id=send(:[], :id) value=send(:[], :value) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
-
-      div.control.column
-        span
-          = "#{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+      div.control.column.slider.mt-5 data-controller="slider"
+        span.is-align-self-center
+          = 0
+        span.slider-container.is-align-self-center
+          span.range-label.tag.is-info.is-normal data-slider-target="label"
+            span data-slider-target="value"
+              = 50
+            span
+              = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+          input.is-size-7-mobile [
+            id=send(:[], :id)
+            value=send(:[], :value)
+            type="range"
+            data-action="input->carbon-item#updateResult input->slider#updateLabelPosition"
+            data-carbon-item-target="quantity"
+            data-slider-target="range"
+            min="0" max="100"]
+        span.is-align-self-center
+          = 100
 
   div.column.is-one-third-tablet.is-half-mobile
     div.columns.is-vcentered.is-mobile
       div.column.control.is-three-quarters-tablet.is-two-thirds-mobile
         div.field
-          input.input.has-text-centered.is-size-7-mobile type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+          input.input.has-text-centered.is-size-7-mobile type="input" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
       div.column.is-one-quarter-tablet.is-one-third-mobile.has-text-right.is-size-7-mobile
         span
           = "kgCO"
