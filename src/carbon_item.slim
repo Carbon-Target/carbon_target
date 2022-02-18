@@ -9,7 +9,7 @@ div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile
     div.columns.field.has-addons.is-vcentered
       div.control.column
-        input.input.is-size-7-mobile id=send(:[], :id) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
+        input.input.is-size-7-mobile id=send(:[], :id) value=send(:[], :value) type="number" data-action="keyup->carbon-item#updateResult" data-carbon-item-target="quantity"
 
       div.control.column
         span
