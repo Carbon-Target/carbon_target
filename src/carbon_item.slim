@@ -5,6 +5,17 @@ label.label.mt-3 for=send(:[], :id)
     
 - frequencies = { day: "jr", week: "sem", month: "mois", year: "an" }
 
+- if send(:[], :kinds)
+  - kinds = send(:[], :kinds)
+  div.controls.block
+    p
+      = send(:[], :kinds_title)
+      - kinds.each do |kind|
+        label.radio
+          input type="radio" value=kind[:emission_factor] name="kinds_#{send(:[], :id)}" checked=kind[:selected] data-kinds-picker-target="radio" data-action="kinds-picker#changeKind"
+          span.kind-label style="background-color:#{kind[:color]}"
+            = kind[:label]
+
 div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile
     div.columns.field.has-addons.is-vcentered
@@ -32,7 +43,13 @@ div.columns.is-mobile
     div.columns.is-vcentered.is-mobile
       div.column.control.is-three-quarters-tablet.is-two-thirds-mobile
         div.field
-          input.input.has-text-centered.is-size-7-mobile type="number" value="0" readonly="readonly" data-carbon-item-target="result" data-carbon-recap-target="item" data-action="change->carbon-recap#updateResult"
+          input.input.has-text-centered.is-size-7-mobile [
+            type="number"
+            value="0"
+            readonly="readonly"
+            data-carbon-item-target="result"
+            data-carbon-recap-target="item"
+            data-action="change->carbon-recap#updateResult"]
       div.column.is-one-quarter-tablet.is-one-third-mobile.has-text-right.is-size-7-mobile
         span
           = "kgCO"
