@@ -31,7 +31,8 @@ html
 
         updateLabelPosition() {
           this.valueTarget.innerHTML = this.rangeTarget.value
-          this.labelTarget.style.left = `calc(${this.rangeTarget.value}% - ${this.labelTarget.clientWidth}px / 2)`
+          let percent = this.rangeTarget.value * 100 / this.rangeTarget.max
+          this.labelTarget.style.left = `calc(${percent}% - ${this.labelTarget.clientWidth}px / 2)`
         }
       })
 
