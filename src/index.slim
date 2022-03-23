@@ -51,6 +51,10 @@ html
           return this.frequencyHash[this.frequencyValue]
         }
 
+        emissionFactorValueChanged() {
+          this.updateResult()
+        }
+
         updateResult() {
           let result = this.quantityTarget.value
             * this.computeFrequencyFactor()
@@ -173,6 +177,18 @@ html
               const sliderControlers = this.application.getControllerForElementAndIdentifier(e, 'slider')
               sliderControlers.updateLabelPosition()
             })
+          }
+        }
+      })
+
+      Stimulus.register("kinds-picker", class extends Controller {
+        static targets = [ "radio" ]
+
+        changeKind() {
+          const selectedRadio = this.radioTargets.find(radio => { return radio.checked })
+          let item = this.element.closest('[data-controller~=carbon-item]')
+          if (item) {
+            item.dataset.carbonItemEmissionFactorValue = selectedRadio.value
           }
         }
       })
@@ -309,8 +325,8 @@ body class="container block is-max-desktop"
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
 
       ul data-slide-target="list"
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="11" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37 })
+        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="8.5" data-carbon-item-frequency-value="year"
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "A", emission_factor: 3, color: "#009F6E"}, {label: "B", emission_factor: 8.5, color: "#4CB153", selected: true}, {label: "C", emission_factor: 20.5, color: "#71BD69"}] })
 
   section class="section"
     div class="content has-text-centered-desktop pb-6"
