@@ -37,3 +37,20 @@ input[type="radio"] + span
 
 input[type="radio"]:checked + span
   border: 2px solid hsl(217, 71%, 53%)
+
+.carbon-target
+  z-index: 10
+  position: sticky
+  top: 0px
+  padding: 10px
+  background-color: $white
+
+.target-slider
+  .arrow
+    cursor: pointer
+    user-select: none
+  .slider
+    .slider-container
+      vertical-align: super
+    input
+      width: calc(100% - 6.55em)
