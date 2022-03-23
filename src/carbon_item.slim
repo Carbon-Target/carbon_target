@@ -7,11 +7,14 @@ label.label.mt-3 for=send(:[], :id)
 
 - if send(:[], :kinds)
   - kinds = send(:[], :kinds)
-  div.controls
-    - kinds.each do |kind|
-      label.radio
-        input type="radio" value=kind[:emission_factor] name="kinds_#{send(:[], :id)}" checked=kind[:selected] data-kinds-picker-target="radio" data-action="kinds-picker#changeKind"
-        = kind[:label]
+  div.controls.block
+    p
+      = send(:[], :kinds_title)
+      - kinds.each do |kind|
+        label.radio
+          input type="radio" value=kind[:emission_factor] name="kinds_#{send(:[], :id)}" checked=kind[:selected] data-kinds-picker-target="radio" data-action="kinds-picker#changeKind"
+          span.kind-label style="background-color:#{kind[:color]}"
+            = kind[:label]
 
 div.columns.is-mobile
   div.column.is-two-thirds-tablet.is-half-mobile

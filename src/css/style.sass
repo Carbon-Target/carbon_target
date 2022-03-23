@@ -26,3 +26,14 @@
     position: absolute
     left: 50%
     top: 0
+
+input[type="radio"]
+  position: fixed
+  opacity: 0
+  pointer-events: none
+
+input[type="radio"] + span
+  padding: 10px 12px
+
+input[type="radio"]:checked + span
+  border: 2px solid hsl(217, 71%, 53%)
