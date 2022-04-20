@@ -297,20 +297,12 @@ body class="container block is-max-desktop"
           span class="is-hidden-tablet" kg
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul data-slide-target="list"
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture essence", id: "car-gas", unit: "km", frequency: "year", value: 5000 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.0687" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture électrique", id: "car-elec", unit: "km", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train France", id: "train-france", unit: "km", frequency: "year", value: 6000 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.05" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train Europe", id: "train-euro", unit: "km", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion court courrier", id: "plane-short", unit: "km", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.187" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion moyen courrier", id: "plane-mid", unit: "km", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.152" data-carbon-item-frequency-value="year"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion long courrier", id: "plane-long", unit: "km", frequency: "year", value: 0 })
+        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year"
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5000, kinds: [{label: "GO", emission_factor: 0.142, color: "#E7E50E", selected: true}, {label: "SP", emission_factor: 0.149, color: "#71BD69"}, {label: "VH", emission_factor: 0.098, color: "linear-gradient(135deg, #71BD69 50%, #3e8ed0 50%)"}, {label: "VE", emission_factor: 0.0687, color: "#3e8ed0"}], kinds_title: "Type de véhicule : " })
+        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year"
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 6000, kinds: [{label: "    ", emission_factor: 0.00592, color: "url(/images/flag-fr.png) no-repeat center center", selected: true}, {label: "    ", emission_factor: 0.05, color: "url(/images/flag-eu.png) no-repeat center center"}], kinds_title: "Train en : " })
+        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year"
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
