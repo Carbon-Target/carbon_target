@@ -70,12 +70,8 @@ html
       })
 
       Stimulus.register("carbon-main-recap", class extends Controller {
-        static targets = [ "item", "total", "box", "unit" ]
+        static targets = [ "item", "total", "box", "unit", "goal" ]
         static classes = [ "aboveTarget", "belowTarget" ]
-
-        initialize() {
-          this.carbonTarget = 2.0
-        }
 
         connect() {
           this.updateBoxColor(0);
@@ -97,7 +93,7 @@ html
         }
 
         updateUnit(result) {
-          if (result < this.carbonTarget) {
+          if (result < 2) {
             this.unitTarget.innerHTML = "&nbsp;tonne"
           } else {
             this.unitTarget.innerHTML = "&nbsp;tonnes"
@@ -106,7 +102,7 @@ html
 
         updateBoxColor(result) {
           if (!this.hasBoxTarget) { return }
-          if (result <= this.carbonTarget) {
+          if (result <= parseFloat(this.goalTarget.innerHTML)) {
             this.boxTarget.classList.remove(this.aboveTargetClass)
             this.boxTarget.classList.add(this.belowTargetClass)
           } else {
@@ -118,10 +114,6 @@ html
 
       Stimulus.register("carbon-recap", class extends Controller {
         static targets = [ "item", "total", "box", "unit" ]
-
-        initialize() {
-          this.carbonTarget = 2.0
-        }
 
         // Sums the result of each line & updates the total
         updateResult() {
@@ -138,7 +130,7 @@ html
         }
 
         updateUnit(result) {
-          if (result < this.carbonTarget) {
+          if (result < 2) {
             this.unitTarget.innerHTML = "&nbsp;kilo"
           } else {
             this.unitTarget.innerHTML = "&nbsp;kilos"
@@ -194,6 +186,35 @@ html
         }
       })
 
+      Stimulus.register("target-slider", class extends Controller {
+        static targets = [ "value", "range", "unit" ]
+
+        updateUnit(result) {
+          if (result < 2) {
+            this.unitTarget.innerHTML = "&nbsp;tonne"
+          } else {
+            this.unitTarget.innerHTML = "&nbsp;tonnes"
+          }
+        }
+
+        updateValue() {
+          this.valueTarget.innerHTML = this.rangeTarget.value
+
+          this.updateUnit(this.rangeTarget.value)
+        }
+
+        increaseValue() {
+          this.rangeTarget.value = parseInt(this.rangeTarget.value) + 1
+          this.updateValue()
+        }
+
+        decreaseValue() {
+          this.rangeTarget.value = parseInt(this.rangeTarget.value) - 1
+          this.updateValue()
+        }
+      })
+
+
     script type="text/javascript" src="javascript.js"
 
 body class="container block is-max-desktop"
@@ -225,27 +246,43 @@ body class="container block is-max-desktop"
 
       p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
 
-    section class="level is-mobile"
-      div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
-        div
-          p class="heading" Calcul
-          p class="title"
-            span data-carbon-main-recap-target="total"
-              = "0.00"
-            span class="is-hidden-tablet" t
-            span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
+    section class="is-mobile carbon-target" data-controller="target-slider"
+      section class="level"
+        div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
+          div
+            p class="heading" Calcul
+            p class="title"
+              span data-carbon-main-recap-target="total"
+                = "0.00"
+              span class="is-hidden-tablet" t
+              span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
-      div class="level-item has-text-centered"
-        div
-          p class="heading" VS
+        div class="level-item has-text-centered"
+          div
+            p class="heading" VS
 
-      div class="box level-item has-text-centered has-background-primary-light"
-        div
-          p class="heading" Cible
-          p class="title"
-            = "2"
-            span class="is-hidden-tablet" t
-            span class="is-hidden-mobile" &nbsp;tonnes
+        div class="box level-item has-text-centered has-background-primary-light"
+          div
+            p class="heading" Cible
+            p class="title"
+              span data-target-slider-target="value" data-carbon-main-recap-target="goal"
+                = "2"
+              span class="is-hidden-tablet" t
+              span class="is-hidden-mobile" data-target-slider-target="unit" &nbsp;tonnes
+
+      div class="target-slider"
+        div.control.slider
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateResult"
+              = "⬅ "
+          span.slider-container.is-align-self-center
+            input.is-size-7-mobile [
+              value=2
+              type="range"
+              data-action="input->target-slider#updateValue input->carbon-main-recap#updateResult"
+              data-target-slider-target="range"
+              min="0" max="10" step="1"]
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
+            = " ➡"
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
