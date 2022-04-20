@@ -13,7 +13,7 @@ label.label.mt-3 for=send(:[], :id)
       - kinds.each do |kind|
         label.radio
           input type="radio" value=kind[:emission_factor] name="kinds_#{send(:[], :id)}" checked=kind[:selected] data-kinds-picker-target="radio" data-action="kinds-picker#changeKind"
-          span.kind-label style="background-color:#{kind[:color]}"
+          span.kind-label style="background:#{kind[:color]}"
             = kind[:label]
 
 div.columns.is-mobile
