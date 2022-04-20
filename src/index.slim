@@ -273,7 +273,7 @@ body class="container block is-max-desktop"
       div class="target-slider"
         div.control.slider
           span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateResult"
-              = "⬅ "
+            <img src="/images/left-arrow.png" />
           span.slider-container.is-align-self-center
             input.is-size-7-mobile [
               value=2
@@ -282,7 +282,7 @@ body class="container block is-max-desktop"
               data-target-slider-target="range"
               min="0" max="10" step="1"]
           span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
-            = " ➡"
+            <img src="/images/right-arrow.png" />
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
