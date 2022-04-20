@@ -329,12 +329,19 @@ html
       })
 
       Stimulus.register("kinds-picker", class extends Controller {
-        static targets = [ "radio" ]
+        static targets = [ "radio", "sliderElement", "slider" ]
 
         changeKind() {
           const selectedRadio = this.radioTargets.find(radio => { return radio.checked })
           let item = this.element.closest('[data-controller~=carbon-item]')
+          // Add to this condition if we don't want to change the slider value, but change the computed result instead
           if (item) {
+            if (this.sliderElementTarget && this.sliderElementTarget.value > 0) {
+              let newValue = this.sliderElementTarget.value * item.dataset.carbonItemEmissionFactorValue / selectedRadio.value
+              this.sliderElementTarget.value = newValue
+              const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
+              sliderController.updateLabelPosition()
+            }
             item.dataset.carbonItemEmissionFactorValue = selectedRadio.value
           }
         }
