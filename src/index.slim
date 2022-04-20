@@ -265,6 +265,10 @@ html
       Stimulus.register("carbon-recap", class extends Controller {
         static targets = [ "item", "total", "box", "unit" ]
 
+        connect() {
+          this.updateResult()
+        }
+
         // Sums the result of each line & updates the total
         updateResult() {
           let result = 0
