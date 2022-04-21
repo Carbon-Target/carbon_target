@@ -28,7 +28,7 @@ div.columns.is-mobile
               = send(:[], :value)
             span
               = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
-          input.is-size-7-mobile [
+          input.is-size-7-mobile.mx-2 [
             id=send(:[], :id)
             value=send(:[], :value)
             type="range"
@@ -49,7 +49,7 @@ div.columns.is-mobile
             value="0"
             readonly="readonly"
             data-carbon-item-target="result"
-            data-carbon-recap-target="item"
+            data-carbon-recap-target="result"
             data-action="change->carbon-recap#updateResult"]
       div.column.is-one-quarter-tablet.is-one-third-mobile.has-text-right.is-size-7-mobile
         span
