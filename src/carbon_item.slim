@@ -39,7 +39,7 @@ div.columns.is-mobile
 
   div.column.is-one-third-tablet.is-half-mobile
     div.columns.is-vcentered.is-mobile
-      div.column.control.is-three-quarters-tablet.is-two-thirds-mobile
+      div.column.control.is-three-fifths-tablet.is-two-quarter-mobile
         div.field
           input.input.has-text-centered.is-size-7-mobile [
             type="number"
@@ -48,7 +48,10 @@ div.columns.is-mobile
             data-carbon-item-target="result"
             data-carbon-recap-target="result"
             data-action="change->carbon-recap#updateResult"]
-      div.column.is-one-quarter-tablet.is-one-third-mobile.has-text-right.is-size-7-mobile
+      div.column.is-one-fifth-tablet.is-one-quarter-mobile.has-text-center.is-size-7-mobile
         span
           = "kgCO"
           sub = "2"
+      div.locks.column.is-one-fifth-tablet.is-one-quarter-mobile.is-mobile data-action="click->carbon-item#toggleLock"
+        i.fas.fa-unlock.mt-5.has-text-primary data-carbon-item-target="unlock"
+        i.fas.fa-lock.mt-5.is-hidden.has-text-danger data-carbon-item-target="lock"
