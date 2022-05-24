@@ -55,6 +55,7 @@ html
 
         connect() {
           this.updateResult()
+          this.dispatch("carbonItemConnected")
         }
 
         minValueChanged() {
@@ -271,10 +272,30 @@ html
       })
 
       Stimulus.register("carbon-recap", class extends Controller {
-        static targets = [ "result", "total", "box", "unit", "item" ]
+
+        static targets = [ "item", "total", "box", "unit", "slider", "result" ]
 
         connect() {
           this.updateResult()
+
+          setTimeout(function() {
+            const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
+            this.mainRecapController = this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
+            this.updateSliderFromTotal()
+          }.bind(this), 300)
+        }
+
+        mainRecapTotal() {
+          return parseFloat(this.mainRecapController.totalTarget.innerHTML) * 1000
+        }
+
+        carbonItemControllers() {
+          const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
+          this.itemControllers ||= items.map(item => {
+            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          })
+          return this.itemControllers
+
         }
 
         // Sums the result of each line & updates the total
@@ -294,8 +315,40 @@ html
 
         updateItemsMaxValue(result) {
           this.itemTargets.forEach((i) => {
+            console.log(i)
             i.dataset.carbonItemMaxValue = Math.round(result / i.dataset.carbonItemEmissionFactorValue)
           })
+        }
+
+        // Sets the slider FROM the totals
+        updateSliderFromTotal() {
+          this.sliderTarget.value = parseInt(this.totalTarget.innerHTML) * 100 / this.mainRecapTotal()
+          this.previousTotalPercent = this.sliderTarget.value
+        }
+
+        // When slider has been manually touched
+        updateFromSlider() {
+          const recapTotal = (this.sliderTarget.value / 100) * this.mainRecapTotal()
+          this.totalTarget.innerHTML = Math.round(recapTotal)
+          this.dispatch("updateResult")
+
+          const difference = this.sliderTarget.value - this.previousTotalPercent
+
+          const carbonItemsCount = this.carbonItemControllers().length
+
+          this.carbonItemControllers().forEach(controller => {
+            console.log(controller.quantityTarget.value)
+            console.log(carbonItemsCount)
+            console.log(difference)
+            const quantity = parseInt(controller.quantityTarget.value)
+            const pouilleme = parseFloat((difference / (100)) * quantity)
+            console.log(quantity)
+            console.log(pouilleme)
+            console.log(quantity + pouilleme)
+            controller.updateQuantity(Math.round(quantity + pouilleme))
+          })
+
+          this.previousTotalPercent = this.sliderTarget.value
         }
 
         updateUnit(result) {
@@ -462,12 +515,21 @@ body class="container block is-max-desktop"
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se déplacer"
+
+        span.carbon-slider-container.is-align-self-center
+          input [
+            value=2
+            type="range"
+            data-action="input->carbon-recap#updateFromSlider"
+            data-carbon-recap-target="slider"
+            min="0" max="100" step="1"]
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -481,12 +543,21 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se nourrir"
+
+        span.carbon-slider-container.is-align-self-center
+          input [
+            value=2
+            type="range"
+            data-action="input->carbon-recap#updateResult"
+            data-carbon-recap-target="slider"
+            min="0" max="100" step="1"]
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -500,12 +571,21 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "S'équiper"
+
+        span.carbon-slider-container.is-align-self-center
+          input [
+            value=2
+            type="range"
+            data-action="input->carbon-recap#updateResult"
+            data-carbon-recap-target="slider"
+            min="0" max="100" step="1"]
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -519,12 +599,21 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se loger"
+
+        span.carbon-slider-container.is-align-self-center
+          input [
+            value=2
+            type="range"
+            data-action="input->carbon-recap#updateResult"
+            data-carbon-recap-target="slider"
+            min="0" max="100" step="1"]
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
