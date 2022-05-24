@@ -76,6 +76,16 @@ html
           this.quantityTarget.setAttribute("max", this.maxValue)
         }
 
+        mainRecapController() {
+          const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
+          return this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
+        }
+
+        recapController() {
+          const recap = this.element.closest('[data-controller~=carbon-recap]')
+          return this.application.getControllerForElementAndIdentifier(recap, 'carbon-recap')
+        }
+
         computeFrequencyFactor() {
           return this.frequencyHash[this.frequencyValue]
         }
@@ -92,54 +102,54 @@ html
           return value / (this.computeFrequencyFactor() * this.emissionFactorValue)
         }
 
-        updateMealResult(event) {
-          if (this.typeValue != "meal")
-            return
+        //updateMealResult(event) {
+        //  if (this.typeValue != "meal")
+        //    return
 
-          const items = Array.from(this.element.parentElement.querySelectorAll("li"))
-          let itemsControllers = items.map(item => {
-            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
-          })
-          const beefController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "beef"
-          })[0]
-          const chickenController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "chicken"
-          })[0]
-          const vegController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "veg"
-          })[0]
+        //  const items = Array.from(this.element.parentElement.querySelectorAll("li"))
+        //  let itemsControllers = items.map(item => {
+        //    return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+        //  })
+        //  const beefController = itemsControllers.filter(itemController => {
+        //    return itemController.subtypeValue == "beef"
+        //  })[0]
+        //  const chickenController = itemsControllers.filter(itemController => {
+        //    return itemController.subtypeValue == "chicken"
+        //  })[0]
+        //  const vegController = itemsControllers.filter(itemController => {
+        //    return itemController.subtypeValue == "veg"
+        //  })[0]
 
-          // Execute sliders modifications incrementally `abs(difference)` number of times
-          const difference = this.quantityTarget.value - this.previousValue
-          const subDifference = difference > 0 ? 1 : -1
+        //  // Execute sliders modifications incrementally `abs(difference)` number of times
+        //  const difference = this.quantityTarget.value - this.previousValue
+        //  const subDifference = difference > 0 ? 1 : -1
 
-          Array.from({ length: Math.abs(difference) }, () => {
-            if (this.subtypeValue == "beef") {
-              if (vegController.isAboveMin()) {
-                vegController.decrementQuantityBy(subDifference)
-              } else {
-                chickenController.decrementQuantityBy(subDifference)
-              }
-            } else if (this.subtypeValue == "chicken") {
-              if (vegController.isAboveMin()) {
-                vegController.decrementQuantityBy(subDifference)
-              } else {
-                beefController.decrementQuantityBy(subDifference)
-              }
-            } else {
-              if (beefController.isAboveMin()) {
-                beefController.decrementQuantityBy(subDifference)
-              } else {
-                chickenController.decrementQuantityBy(subDifference)
-              }
-            }
-          })
+        //  Array.from({ length: Math.abs(difference) }, () => {
+        //    if (this.subtypeValue == "beef") {
+        //      if (vegController.isAboveMin()) {
+        //        vegController.decrementQuantityBy(subDifference)
+        //      } else {
+        //        chickenController.decrementQuantityBy(subDifference)
+        //      }
+        //    } else if (this.subtypeValue == "chicken") {
+        //      if (vegController.isAboveMin()) {
+        //        vegController.decrementQuantityBy(subDifference)
+        //      } else {
+        //        beefController.decrementQuantityBy(subDifference)
+        //      }
+        //    } else {
+        //      if (beefController.isAboveMin()) {
+        //        beefController.decrementQuantityBy(subDifference)
+        //      } else {
+        //        chickenController.decrementQuantityBy(subDifference)
+        //      }
+        //    }
+        //  })
 
-          this.previousValue = this.quantityTarget.value
-          this.resultTarget.value = Math.round(this.unitToCarbon(this.quantityTarget.value) || 0)
-          this.resultTarget.dispatchEvent(new Event('change'))
-        }
+        //  this.previousValue = this.quantityTarget.value
+        //  this.resultTarget.value = Math.round(this.unitToCarbon(this.quantityTarget.value) || 0)
+        //  this.resultTarget.dispatchEvent(new Event('change'))
+        //}
 
         updateResult(event) {
           let result = this.unitToCarbon(this.quantityTarget.value)
@@ -150,8 +160,8 @@ html
             // change this to Action Parameters if needed
             if (event) {
 
-              if (this.typeValue == "meal")
-                return
+              //if (this.typeValue == "meal")
+              //  return
 
               const difference = result - this.unitToCarbon(this.previousValue)
               this.updateOtherSliders(difference)
@@ -191,12 +201,16 @@ html
         }
 
         updateOtherSliders(difference) {
-          const items = Array.from(this.element.parentElement.querySelectorAll("li")).filter(item => {
-            // we eliminate the manually modified slider
-            return item !== this.element
-          })
-          let itemsControllers = items.map(item => {
-            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          //const items = Array.from(this.mainRecapController().element.querySelectorAll("[data-controller~=carbon-item]")).filter(item => {
+          //  // we eliminate the manually modified slider
+          //  return item !== this.element
+          //})
+          //let itemsControllers = items.map(item => {
+          //  return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          //})
+
+          let itemsControllers = this.mainRecapController().carbonItemControllers().filter(controller => {
+            return controller !== this
           })
 
           // Compute the total number of items to affect with modifications
@@ -206,7 +220,7 @@ html
               return !(itemController.isAboveMax())
             })
           } else {
-            // we exclude mined out inputs
+            // we exclude min-ed out inputs
             itemsControllers = itemsControllers.filter(itemController => {
               return !(itemController.isBelowMin())
             })
@@ -219,6 +233,12 @@ html
 
             const resultInUnit = itemController.carbonToUnit(result)
             itemController.updateQuantity(resultInUnit)
+          })
+
+          // After updating all items, we also update all categories counts
+          // (should this be placed in the mainRecapController ?)
+          this.mainRecapController().carbonRecapControllers().forEach((recapController) => {
+            recapController.updateResult()
           })
         }
 
@@ -233,7 +253,27 @@ html
         static classes = [ "aboveTarget", "belowTarget" ]
 
         connect() {
-          this.updateBoxColor(0);
+          this.updateBoxColor(0)
+
+          setTimeout(function() {
+            this.updateItemsMaxValue(parseInt(this.goalTarget.innerHTML) * 1000)
+          }.bind(this), 1000)
+        }
+
+        carbonItemControllers() {
+          const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
+          this.itemControllers ||= items.map(item => {
+            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          })
+          return this.itemControllers
+        }
+
+        carbonRecapControllers() {
+          const recaps = Array.from(this.element.querySelectorAll("[data-controller~=carbon-recap]"))
+          this.recapControllers ||= recaps.map(recap => {
+            return this.application.getControllerForElementAndIdentifier(recap, 'carbon-recap')
+          })
+          return this.recapControllers
         }
 
         // Sums the result of each line & updates the total
@@ -269,6 +309,20 @@ html
             this.boxTarget.classList.add(this.aboveTargetClass)
           }
         }
+
+        // Triggered from target-slider controller when the total goal is changed
+        // All maximums should be updated.
+        updateItemsMaxValue(goalValue) {
+          this.carbonItemControllers().forEach((itemController) => {
+            if (itemController.typeValue == "meal") {
+              // meal number is given / week, so we have to account for that
+              itemController.maxValue = Math.round(goalValue / (itemController.emissionFactorValue * 52))
+            } else {
+              itemController.maxValue = Math.round(goalValue / itemController.emissionFactorValue)
+            }
+          })
+        }
+
       })
 
       Stimulus.register("carbon-recap", class extends Controller {
@@ -277,12 +331,6 @@ html
 
         connect() {
           this.updateResult()
-
-          setTimeout(function() {
-            const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
-            this.mainRecapController = this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
-            this.updateSliderFromTotal()
-          }.bind(this), 300)
         }
 
         mainRecapTotal() {
@@ -291,11 +339,10 @@ html
 
         carbonItemControllers() {
           const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
-          this.itemControllers ||= items.map(item => {
+          this.itemControllers = items.map(item => {
             return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
           })
           return this.itemControllers
-
         }
 
         // Sums the result of each line & updates the total
@@ -309,46 +356,7 @@ html
           this.totalTarget.innerHTML = result
 
           this.updateUnit(result)
-          this.updateItemsMaxValue(result)
           this.dispatch("updateResult")
-        }
-
-        updateItemsMaxValue(result) {
-          this.itemTargets.forEach((i) => {
-            console.log(i)
-            i.dataset.carbonItemMaxValue = Math.round(result / i.dataset.carbonItemEmissionFactorValue)
-          })
-        }
-
-        // Sets the slider FROM the totals
-        updateSliderFromTotal() {
-          this.sliderTarget.value = parseInt(this.totalTarget.innerHTML) * 100 / this.mainRecapTotal()
-          this.previousTotalPercent = this.sliderTarget.value
-        }
-
-        // When slider has been manually touched
-        updateFromSlider() {
-          const recapTotal = (this.sliderTarget.value / 100) * this.mainRecapTotal()
-          this.totalTarget.innerHTML = Math.round(recapTotal)
-          this.dispatch("updateResult")
-
-          const difference = this.sliderTarget.value - this.previousTotalPercent
-
-          const carbonItemsCount = this.carbonItemControllers().length
-
-          this.carbonItemControllers().forEach(controller => {
-            console.log(controller.quantityTarget.value)
-            console.log(carbonItemsCount)
-            console.log(difference)
-            const quantity = parseInt(controller.quantityTarget.value)
-            const pouilleme = parseFloat((difference / (100)) * quantity)
-            console.log(quantity)
-            console.log(pouilleme)
-            console.log(quantity + pouilleme)
-            controller.updateQuantity(Math.round(quantity + pouilleme))
-          })
-
-          this.previousTotalPercent = this.sliderTarget.value
         }
 
         updateUnit(result) {
@@ -426,10 +434,16 @@ html
           }
         }
 
+        mainRecapController() {
+          const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
+          return this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
+        }
+
         updateValue() {
           this.valueTarget.innerHTML = this.rangeTarget.value
 
           this.updateUnit(this.rangeTarget.value)
+          this.mainRecapController().updateItemsMaxValue(this.rangeTarget.value * 1000)
         }
 
         increaseValue() {
@@ -522,14 +536,6 @@ body class="container block is-max-desktop"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se déplacer"
 
-        span.carbon-slider-container.is-align-self-center
-          input [
-            value=2
-            type="range"
-            data-action="input->carbon-recap#updateFromSlider"
-            data-carbon-recap-target="slider"
-            min="0" max="100" step="1"]
-
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -549,14 +555,6 @@ body class="container block is-max-desktop"
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se nourrir"
-
-        span.carbon-slider-container.is-align-self-center
-          input [
-            value=2
-            type="range"
-            data-action="input->carbon-recap#updateResult"
-            data-carbon-recap-target="slider"
-            min="0" max="100" step="1"]
 
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
@@ -578,14 +576,6 @@ body class="container block is-max-desktop"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "S'équiper"
 
-        span.carbon-slider-container.is-align-self-center
-          input [
-            value=2
-            type="range"
-            data-action="input->carbon-recap#updateResult"
-            data-carbon-recap-target="slider"
-            min="0" max="100" step="1"]
-
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -605,14 +595,6 @@ body class="container block is-max-desktop"
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se loger"
-
-        span.carbon-slider-container.is-align-self-center
-          input [
-            value=2
-            type="range"
-            data-action="input->carbon-recap#updateResult"
-            data-carbon-recap-target="slider"
-            min="0" max="100" step="1"]
 
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
