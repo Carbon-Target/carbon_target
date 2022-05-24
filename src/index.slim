@@ -102,55 +102,6 @@ html
           return value / (this.computeFrequencyFactor() * this.emissionFactorValue)
         }
 
-        //updateMealResult(event) {
-        //  if (this.typeValue != "meal")
-        //    return
-
-        //  const items = Array.from(this.element.parentElement.querySelectorAll("li"))
-        //  let itemsControllers = items.map(item => {
-        //    return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
-        //  })
-        //  const beefController = itemsControllers.filter(itemController => {
-        //    return itemController.subtypeValue == "beef"
-        //  })[0]
-        //  const chickenController = itemsControllers.filter(itemController => {
-        //    return itemController.subtypeValue == "chicken"
-        //  })[0]
-        //  const vegController = itemsControllers.filter(itemController => {
-        //    return itemController.subtypeValue == "veg"
-        //  })[0]
-
-        //  // Execute sliders modifications incrementally `abs(difference)` number of times
-        //  const difference = this.quantityTarget.value - this.previousValue
-        //  const subDifference = difference > 0 ? 1 : -1
-
-        //  Array.from({ length: Math.abs(difference) }, () => {
-        //    if (this.subtypeValue == "beef") {
-        //      if (vegController.isAboveMin()) {
-        //        vegController.decrementQuantityBy(subDifference)
-        //      } else {
-        //        chickenController.decrementQuantityBy(subDifference)
-        //      }
-        //    } else if (this.subtypeValue == "chicken") {
-        //      if (vegController.isAboveMin()) {
-        //        vegController.decrementQuantityBy(subDifference)
-        //      } else {
-        //        beefController.decrementQuantityBy(subDifference)
-        //      }
-        //    } else {
-        //      if (beefController.isAboveMin()) {
-        //        beefController.decrementQuantityBy(subDifference)
-        //      } else {
-        //        chickenController.decrementQuantityBy(subDifference)
-        //      }
-        //    }
-        //  })
-
-        //  this.previousValue = this.quantityTarget.value
-        //  this.resultTarget.value = Math.round(this.unitToCarbon(this.quantityTarget.value) || 0)
-        //  this.resultTarget.dispatchEvent(new Event('change'))
-        //}
-
         updateResult(event) {
           let result = this.unitToCarbon(this.quantityTarget.value)
 
@@ -159,10 +110,6 @@ html
             // the only time an event is not present is in the connect() call
             // change this to Action Parameters if needed
             if (event) {
-
-              //if (this.typeValue == "meal")
-              //  return
-
               const difference = result - this.unitToCarbon(this.previousValue)
               this.updateOtherSliders(difference)
               this.previousValue = this.quantityTarget.value
