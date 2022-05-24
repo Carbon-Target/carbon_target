@@ -201,14 +201,6 @@ html
         }
 
         updateOtherSliders(difference) {
-          //const items = Array.from(this.mainRecapController().element.querySelectorAll("[data-controller~=carbon-item]")).filter(item => {
-          //  // we eliminate the manually modified slider
-          //  return item !== this.element
-          //})
-          //let itemsControllers = items.map(item => {
-          //  return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
-          //})
-
           let itemsControllers = this.mainRecapController().carbonItemControllers().filter(controller => {
             return controller !== this
           })
@@ -217,7 +209,7 @@ html
           if (difference < 0) {
             // we exclude the maxed out inputs
             itemsControllers = itemsControllers.filter(itemController => {
-              return !(itemController.isAboveMax())
+              return !(itemController.isAboveMax()) && !(itemController.isBelowMin())
             })
           } else {
             // we exclude min-ed out inputs
