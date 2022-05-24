@@ -344,20 +344,19 @@ html
       })
 
       Stimulus.register("kinds-picker", class extends Controller {
-        static targets = [ "radio", "sliderElement", "slider" ]
+        static targets = [ "select", "sliderElement", "slider" ]
 
         changeKind() {
-          const selectedRadio = this.radioTargets.find(radio => { return radio.checked })
           let item = this.element.closest('[data-controller~=carbon-item]')
           // Add to this condition if we don't want to change the slider value, but change the computed result instead
           if (item) {
             if (this.sliderElementTarget && this.sliderElementTarget.value > 0) {
-              let newValue = this.sliderElementTarget.value * item.dataset.carbonItemEmissionFactorValue / selectedRadio.value
+              let newValue = this.sliderElementTarget.value * item.dataset.carbonItemEmissionFactorValue / this.selectTarget.value
               this.sliderElementTarget.value = newValue
               const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
               sliderController.updateLabelPosition()
             }
-            item.dataset.carbonItemEmissionFactorValue = selectedRadio.value
+            item.dataset.carbonItemEmissionFactorValue = this.selectTarget.value
           }
         }
       })
@@ -481,11 +480,11 @@ body class="container block is-max-desktop"
           span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
       ul data-slide-target="list"
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="5000" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="5000" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5000, kinds: [{label: "GO", emission_factor: 0.142, color: "#E7E50E", selected: true}, {label: "SP", emission_factor: 0.149, color: "#71BD69"}, {label: "VH", emission_factor: 0.098, color: "linear-gradient(135deg, #71BD69 50%, #3e8ed0 50%)"}, {label: "VE", emission_factor: 0.0687, color: "#3e8ed0"}], kinds_title: "Type de véhicule : " })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="6000" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="6000" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 6000, kinds: [{label: "    ", emission_factor: 0.00592, color: "url(/images/flag-fr.png) no-repeat center center", selected: true}, {label: "    ", emission_factor: 0.05, color: "url(/images/flag-eu.png) no-repeat center center"}], kinds_title: "Train en : " })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 6000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="0" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
@@ -542,7 +541,7 @@ body class="container block is-max-desktop"
 
       ul data-slide-target="list"
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="8.5" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="100" data-carbon-item-current-value="37" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "A", emission_factor: 3, color: "#009F6E"}, {label: "B", emission_factor: 8.5, color: "#4CB153", selected: true}, {label: "C", emission_factor: 20.5, color: "#71BD69"}, {label: "D", emission_factor: 40, color: "#E7E50E"}, {label: "E", emission_factor: 60, color: "#EEB10C"}, {label: "F", emission_factor: 85, color: "#E78539"}, {label: "G", emission_factor: 120, color: "#D32227"}], kinds_title: "DPE du logement (étiquette climat) : " })
+          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "Étiquette climat A", emission_factor: 3}, {label: "Étiquette climat B", emission_factor: 8.5, selected: true}, {label: "Étiquette climat C", emission_factor: 20.5}, {label: "Étiquette climat D", emission_factor: 40}, {label: "Étiquette climat E", emission_factor: 60}, {label: "Étiquette climat F", emission_factor: 85}, {label: "Étiquette climat G", emission_factor: 120}], kinds_title: "DPE du logement (étiquette climat) : " })
 
   section class="section"
     div class="content has-text-centered-desktop pb-6"
