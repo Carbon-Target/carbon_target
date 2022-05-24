@@ -55,6 +55,7 @@ html
 
         connect() {
           this.updateResult()
+          this.dispatch("carbonItemConnected")
         }
 
         minValueChanged() {
@@ -75,6 +76,16 @@ html
           this.quantityTarget.setAttribute("max", this.maxValue)
         }
 
+        mainRecapController() {
+          const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
+          return this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
+        }
+
+        recapController() {
+          const recap = this.element.closest('[data-controller~=carbon-recap]')
+          return this.application.getControllerForElementAndIdentifier(recap, 'carbon-recap')
+        }
+
         computeFrequencyFactor() {
           return this.frequencyHash[this.frequencyValue]
         }
@@ -91,55 +102,6 @@ html
           return value / (this.computeFrequencyFactor() * this.emissionFactorValue)
         }
 
-        updateMealResult(event) {
-          if (this.typeValue != "meal")
-            return
-
-          const items = Array.from(this.element.parentElement.querySelectorAll("li"))
-          let itemsControllers = items.map(item => {
-            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
-          })
-          const beefController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "beef"
-          })[0]
-          const chickenController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "chicken"
-          })[0]
-          const vegController = itemsControllers.filter(itemController => {
-            return itemController.subtypeValue == "veg"
-          })[0]
-
-          // Execute sliders modifications incrementally `abs(difference)` number of times
-          const difference = this.quantityTarget.value - this.previousValue
-          const subDifference = difference > 0 ? 1 : -1
-
-          Array.from({ length: Math.abs(difference) }, () => {
-            if (this.subtypeValue == "beef") {
-              if (vegController.isAboveMin()) {
-                vegController.decrementQuantityBy(subDifference)
-              } else {
-                chickenController.decrementQuantityBy(subDifference)
-              }
-            } else if (this.subtypeValue == "chicken") {
-              if (vegController.isAboveMin()) {
-                vegController.decrementQuantityBy(subDifference)
-              } else {
-                beefController.decrementQuantityBy(subDifference)
-              }
-            } else {
-              if (beefController.isAboveMin()) {
-                beefController.decrementQuantityBy(subDifference)
-              } else {
-                chickenController.decrementQuantityBy(subDifference)
-              }
-            }
-          })
-
-          this.previousValue = this.quantityTarget.value
-          this.resultTarget.value = Math.round(this.unitToCarbon(this.quantityTarget.value) || 0)
-          this.resultTarget.dispatchEvent(new Event('change'))
-        }
-
         updateResult(event) {
           let result = this.unitToCarbon(this.quantityTarget.value)
 
@@ -148,10 +110,6 @@ html
             // the only time an event is not present is in the connect() call
             // change this to Action Parameters if needed
             if (event) {
-
-              if (this.typeValue == "meal")
-                return
-
               const difference = result - this.unitToCarbon(this.previousValue)
               this.updateOtherSliders(difference)
               this.previousValue = this.quantityTarget.value
@@ -190,22 +148,18 @@ html
         }
 
         updateOtherSliders(difference) {
-          const items = Array.from(this.element.parentElement.querySelectorAll("li")).filter(item => {
-            // we eliminate the manually modified slider
-            return item !== this.element
-          })
-          let itemsControllers = items.map(item => {
-            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          let itemsControllers = this.mainRecapController().carbonItemControllers().filter(controller => {
+            return controller !== this
           })
 
           // Compute the total number of items to affect with modifications
           if (difference < 0) {
             // we exclude the maxed out inputs
             itemsControllers = itemsControllers.filter(itemController => {
-              return !(itemController.isAboveMax())
+              return !(itemController.isAboveMax()) && !(itemController.isBelowMin())
             })
           } else {
-            // we exclude mined out inputs
+            // we exclude min-ed out inputs
             itemsControllers = itemsControllers.filter(itemController => {
               return !(itemController.isBelowMin())
             })
@@ -218,6 +172,12 @@ html
 
             const resultInUnit = itemController.carbonToUnit(result)
             itemController.updateQuantity(resultInUnit)
+          })
+
+          // After updating all items, we also update all categories counts
+          // (should this be placed in the mainRecapController ?)
+          this.mainRecapController().carbonRecapControllers().forEach((recapController) => {
+            recapController.updateResult()
           })
         }
 
@@ -232,7 +192,27 @@ html
         static classes = [ "aboveTarget", "belowTarget" ]
 
         connect() {
-          this.updateBoxColor(0);
+          this.updateBoxColor(0)
+
+          setTimeout(function() {
+            this.updateItemsMaxValue(parseInt(this.goalTarget.innerHTML) * 1000)
+          }.bind(this), 1000)
+        }
+
+        carbonItemControllers() {
+          const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
+          this.itemControllers ||= items.map(item => {
+            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          })
+          return this.itemControllers
+        }
+
+        carbonRecapControllers() {
+          const recaps = Array.from(this.element.querySelectorAll("[data-controller~=carbon-recap]"))
+          this.recapControllers ||= recaps.map(recap => {
+            return this.application.getControllerForElementAndIdentifier(recap, 'carbon-recap')
+          })
+          return this.recapControllers
         }
 
         // Sums the result of each line & updates the total
@@ -268,13 +248,40 @@ html
             this.boxTarget.classList.add(this.aboveTargetClass)
           }
         }
+
+        // Triggered from target-slider controller when the total goal is changed
+        // All maximums should be updated.
+        updateItemsMaxValue(goalValue) {
+          this.carbonItemControllers().forEach((itemController) => {
+            if (itemController.typeValue == "meal") {
+              // meal number is given / week, so we have to account for that
+              itemController.maxValue = Math.round(goalValue / (itemController.emissionFactorValue * 52))
+            } else {
+              itemController.maxValue = Math.round(goalValue / itemController.emissionFactorValue)
+            }
+          })
+        }
+
       })
 
       Stimulus.register("carbon-recap", class extends Controller {
-        static targets = [ "result", "total", "box", "unit", "item" ]
+
+        static targets = [ "item", "total", "box", "unit", "slider", "result" ]
 
         connect() {
           this.updateResult()
+        }
+
+        mainRecapTotal() {
+          return parseFloat(this.mainRecapController.totalTarget.innerHTML) * 1000
+        }
+
+        carbonItemControllers() {
+          const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
+          this.itemControllers = items.map(item => {
+            return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
+          })
+          return this.itemControllers
         }
 
         // Sums the result of each line & updates the total
@@ -288,14 +295,7 @@ html
           this.totalTarget.innerHTML = result
 
           this.updateUnit(result)
-          this.updateItemsMaxValue(result)
           this.dispatch("updateResult")
-        }
-
-        updateItemsMaxValue(result) {
-          this.itemTargets.forEach((i) => {
-            i.dataset.carbonItemMaxValue = Math.round(result / i.dataset.carbonItemEmissionFactorValue)
-          })
         }
 
         updateUnit(result) {
@@ -373,10 +373,16 @@ html
           }
         }
 
+        mainRecapController() {
+          const mainRecap = document.querySelector('[data-controller~=carbon-main-recap]')
+          return this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
+        }
+
         updateValue() {
           this.valueTarget.innerHTML = this.rangeTarget.value
 
           this.updateUnit(this.rangeTarget.value)
+          this.mainRecapController().updateItemsMaxValue(this.rangeTarget.value * 1000)
         }
 
         increaseValue() {
@@ -462,12 +468,13 @@ body class="container block is-max-desktop"
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se déplacer"
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -481,12 +488,13 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se nourrir"
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -500,12 +508,13 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "S'équiper"
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg
@@ -519,12 +528,13 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable" data-action="click->slide#toggleList"
-        span.icon-text
+      h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+        span.icon-text data-action="click->slide#toggleList"
           span.icon
             i.fas.fa-angle-down data-slide-target="angleDown"
             i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
           span = "Se loger"
+
         span
           span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
           span class="is-hidden-tablet" kg

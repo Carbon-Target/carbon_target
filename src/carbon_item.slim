@@ -32,7 +32,7 @@ div.columns.is-mobile
             id=send(:[], :id)
             value=send(:[], :value)
             type="range"
-            data-action="input->carbon-item#updateResult input->carbon-item#updateMealResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
+            data-action="change->carbon-item#updateResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
             data-kinds-picker-target="sliderElement"
             data-carbon-item-target="quantity"
             data-slider-target="range"
