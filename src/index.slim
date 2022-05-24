@@ -396,6 +396,32 @@ html
         }
       })
 
+      Stimulus.register("transport-creator", class extends Controller {
+        static targets = [ "add", "cancel", "form", "carTemplate", "planeTemplate", "trainTemplate" ]
+
+        connect() {
+          this.formTarget.classList.add("is-hidden")
+        }
+
+        toggleSelector(event) {
+          if (event) {
+            event.preventDefault()
+          }
+
+          this.formTarget.classList.toggle("is-hidden")
+          this.addTarget.classList.toggle("is-hidden")
+        }
+
+        addTransport(event) {
+          let targetName = event.target.value + "TemplateTarget"
+          var clone = this[targetName].content.cloneNode(true)
+          this.element.parentNode.insertBefore(clone, this.element)
+
+          this.formTarget.reset()
+          this.toggleSelector()
+        }
+      })
+
 
     script type="text/javascript" src="javascript.js"
 
@@ -486,6 +512,35 @@ body class="container block is-max-desktop"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 6000, kinds: [{label: "    ", emission_factor: 0.00592, color: "url(/images/flag-fr.png) no-repeat center center", selected: true}, {label: "    ", emission_factor: 0.05, color: "url(/images/flag-eu.png) no-repeat center center"}], kinds_title: "Train en : " })
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="0" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
+
+        div class="block mt-5" data-controller="transport-creator"
+          button class="button is-primary" data-action="transport-creator#toggleSelector" data-transport-creator-target="add"
+            i.fas.fa-plus.mr-1
+            | Ajouter un moyen de transport
+          form data-transport-creator-target="form"
+            div.select
+              select data-action="transport-creator#addTransport"
+                option value="none"
+                  | Choisissez un tranport
+                option value="car"
+                  | Voiture
+                option value="train"
+                  | Train
+                option value="plane"
+                  | Avion
+            button class="button is-primary" data-action="transport-creator#toggleSelector"
+              i.fas.fa-times.mr-1
+              | Annuler
+          template#carTemplate data-transport-creator-target="carTemplate"
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="5000" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="5000" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 0, kinds: [{label: "GO", emission_factor: 0.142, color: "#E7E50E", selected: true}, {label: "SP", emission_factor: 0.149, color: "#71BD69"}, {label: "VH", emission_factor: 0.098, color: "linear-gradient(135deg, #71BD69 50%, #3e8ed0 50%)"}, {label: "VE", emission_factor: 0.0687, color: "#3e8ed0"}], kinds_title: "Type de véhicule : " })
+          template#trainTemplate data-transport-creator-target="trainTemplate"
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="6000" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="6000" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 0, kinds: [{label: "    ", emission_factor: 0.00592, color: "url(/images/flag-fr.png) no-repeat center center", selected: true}, {label: "    ", emission_factor: 0.05, color: "url(/images/flag-eu.png) no-repeat center center"}], kinds_title: "Train en : " })
+          template#planeTemplate data-transport-creator-target="planeTemplate"
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-previous-value="0" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "C", emission_factor: 0.258, color: "#3e8ed0", selected: true}, {label: "M", emission_factor: 0.187, color: "#3e8ed0"}, {label: "L", emission_factor: 0.152, color: "#3e8ed0"}], kinds_title: "Type d'avion : " })
+
 
     div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
