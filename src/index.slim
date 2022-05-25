@@ -52,6 +52,7 @@ html
 
         initialize() {
           this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
+          this.resetSlider = false
         }
 
         connect() {
@@ -110,7 +111,9 @@ html
         }
 
         updateResult(event) {
+          this.resetSlider = false
           let result = this.unitToCarbon(this.quantityTarget.value)
+          const memoizedCurrentValue = this.currentValue
 
           if (result) {
             // when an event is present, we touch other sliders
@@ -122,10 +125,16 @@ html
             }
           }
 
+          result = this.resetSlider ? memoizedCurrentValue : result
           this.quantityTarget.value = this.carbonToUnit(result)
           this.resultTarget.value = result < 0 ? 0 : Math.round(result)
           this.currentValue = result
           this.resultTarget.dispatchEvent(new Event('change'))
+
+          if (this.resetSlider) {
+            this.updateSlider()
+            this.resetSlider = false
+          }
         }
 
         updateQuantity() {
@@ -161,6 +170,13 @@ html
           })
 
           let itemsCount = itemsControllers.length
+
+          // if all items other than the current one are at 0, we should halt all process
+          // and return the current slider to its initial position, we set resetSlider to true
+          if (itemsCount <= 0) {
+            this.resetSlider = true
+            return
+          }
 
           // Compute the total number of items to affect with modifications
           if (difference < 0) {
