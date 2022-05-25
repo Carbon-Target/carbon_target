@@ -37,7 +37,7 @@ html
       })
 
       Stimulus.register("carbon-item", class extends Controller {
-        static targets = [ "quantity", "result", "max", "min", "slider" ]
+        static targets = [ "quantity", "result", "max", "min", "slider", "unlock", "lock" ]
         static values = {
           emissionFactor: Number,
           frequency: String,
@@ -46,7 +46,8 @@ html
           max: Number,
           current: Number,
           type: String,
-          subtype: String
+          subtype: String,
+          lock: Boolean
         }
 
         initialize() {
@@ -56,6 +57,12 @@ html
         connect() {
           this.updateResult()
           this.dispatch("carbonItemConnected")
+        }
+
+        toggleLock() {
+          this.lockValue = !this.lockValue
+          this.unlockTarget.classList.toggle("is-hidden")
+          this.lockTarget.classList.toggle("is-hidden")
         }
 
         minValueChanged() {
@@ -143,6 +150,10 @@ html
           return this.quantityTarget.value >= this.maxValue
         }
 
+        isLocked() {
+          return this.lockValue
+        }
+
         isQuantityTargetOutOfBounds() {
           return this.isBelowMin() || this.isAboveMax()
         }
@@ -164,6 +175,10 @@ html
               return !(itemController.isBelowMin())
             })
           }
+          // we exclude locked out inputs
+          itemsControllers = itemsControllers.filter(itemController => {
+            return !(itemController.isLocked())
+          })
 
           const itemsCount = itemsControllers.length
 
