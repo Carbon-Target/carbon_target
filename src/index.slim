@@ -345,7 +345,7 @@ html
           })
 
            // Convert kg into t
-          result = (result / 1000).toFixed(2)
+          result = (result / 1000).toFixed(1)
           this.totalTarget.innerHTML = result
 
           this.updateUnit(result);
@@ -581,7 +581,7 @@ body class="container block is-max-widescreen"
             p class="heading" Calcul
             p class="title"
               span data-carbon-main-recap-target="total"
-                = "0.00"
+                = "0.0"
               span class="is-hidden-tablet" t
               span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
