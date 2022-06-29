@@ -169,6 +169,11 @@ html
             return !itemController.isBelowMin(itemController.carbonToUnit(itemController.currentValue))
           })
 
+          // we exclude locked out inputs
+          itemsControllers = itemsControllers.filter(itemController => {
+            return !(itemController.isLocked())
+          })
+
           let itemsCount = itemsControllers.length
 
           // if all items other than the current one are at 0, we should halt all process
@@ -234,10 +239,6 @@ html
               )
             })
           }
-          // we exclude locked out inputs
-          itemsControllers = itemsControllers.filter(itemController => {
-            return !(itemController.isLocked())
-          })
 
           itemsCount = itemsControllers.length
 
