@@ -515,7 +515,7 @@ html
 
     script type="text/javascript" src="javascript.js"
 
-body class="container block is-max-desktop"
+body class="container block is-max-widescreen"
   section class="section" data-controller="carbon-main-recap" data-carbon-main-recap-below-target-class="has-background-primary-light" data-carbon-main-recap-above-target-class="has-background-danger-light"
     div class="content has-text-centered-desktop pb-6"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
@@ -582,7 +582,7 @@ body class="container block is-max-desktop"
           span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
             <img src="/images/right-arrow.png" />
 
-    div.columns
+    div.columns.is-8.is-variable
       div.column.is-half.is-full-mobile
         div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
