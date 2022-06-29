@@ -615,6 +615,46 @@ body class="container block is-max-widescreen"
     div.columns.is-8.is-variable
       div.column.is-half.is-full-mobile
         div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "Se nourrir"
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+          ul data-slide-target="list"
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="7.26" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="0" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="beef" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de boeuf", id: "meal-beef", unit: "repas", frequency: "week", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.58" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="82.16" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="chicken" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de poulet", id: "meal-chicken", unit: "repas", frequency: "week", value: 2 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.51" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="530.4" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="veg" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
+
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "S'équiper"
+
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+          ul data-slide-target="list"
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€", frequency: "year", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€", frequency: "year", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="500" data-carbon-item-current-value="200" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
+
+      div.column.is-half.is-full-mobile
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
 
           h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
             span.icon-text data-action="click->slide#toggleList"
@@ -662,47 +702,6 @@ body class="container block is-max-widescreen"
               template#planeTemplate data-transport-creator-target="planeTemplate"
                 li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
                   == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
-
-        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
-            span.icon-text data-action="click->slide#toggleList"
-              span.icon
-                i.fas.fa-angle-down data-slide-target="angleDown"
-                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
-              span = "Se nourrir"
-            span
-              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-              span class="is-hidden-tablet" kg
-              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
-          ul data-slide-target="list"
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="7.26" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="0" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="beef" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de boeuf", id: "meal-beef", unit: "repas", frequency: "week", value: 0 })
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.58" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="82.16" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="chicken" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de poulet", id: "meal-chicken", unit: "repas", frequency: "week", value: 2 })
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.51" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="530.4" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="veg" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
-
-      div.column.is-half.is-full-mobile
-        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
-            span.icon-text data-action="click->slide#toggleList"
-              span.icon
-                i.fas.fa-angle-down data-slide-target="angleDown"
-                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
-              span = "S'équiper"
-
-            span
-              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-              span class="is-hidden-tablet" kg
-              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
-          ul data-slide-target="list"
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€", frequency: "year", value: 0 })
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€", frequency: "year", value: 0 })
-            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="500" data-carbon-item-current-value="200" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
-
 
         div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
           h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
