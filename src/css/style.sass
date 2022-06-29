@@ -20,12 +20,14 @@
     padding-top: 1.8em
 
   input
-    width: calc(100% - 8em)
+    width: calc(100% - 10em)
 
   .range-label
     position: absolute
     left: 50%
     top: 0
+  .min-max
+    display: none
 
 input[type="radio"]
   position: fixed
@@ -61,7 +63,11 @@ input[type="radio"]:checked + span
       padding: 0 20px
     input
       width: calc(100% - 40px - 90px)
-
+.locks
+  float: right
 .locks i
   display: contents
   cursor: pointer
+
+.label.mb-5
+  margin-bottom: 2em!important
