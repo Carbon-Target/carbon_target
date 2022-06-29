@@ -176,6 +176,15 @@ html
           return this.lockValue
         }
 
+        aggregateCurrentValueFor(itemControllers) {
+          let totalValue = 0
+          itemControllers.forEach(itemController => {
+            totalValue += itemController.currentValue
+          })
+
+          return totalValue
+        }
+
         updateOtherSliders(difference) {
           let itemsControllers = this.mainRecapController.carbonItemControllers().filter(controller => {
             return controller !== this
@@ -203,10 +212,13 @@ html
           // Compute the total number of items to affect with modifications
           if (difference < 0) {
             // we exclude the inputs that will be maxed out after applying the difference
+            let maxedItemsTotalValue = this.aggregateCurrentValueFor(itemsControllers)
             const maxedItemsControllers = itemsControllers.filter(itemController => {
               return (
                 itemController.isAboveMax(
-                  itemController.carbonToUnit(itemController.currentValue - (difference / itemsCount))
+                  itemController.carbonToUnit(
+                    itemController.currentValue - (difference * (itemController.currentValue / maxedItemsTotalValue))
+                  )
                 )
               )
             })
@@ -221,50 +233,68 @@ html
             })
 
             // we eliminate the maxed out items to apply regular processing to the rest
+            maxedItemsTotalValue = this.aggregateCurrentValueFor(itemsControllers)
             itemsControllers = itemsControllers.filter(itemController => {
               return (
                 !itemController.isAboveMax(
-                  itemController.carbonToUnit(itemController.currentValue - (difference / itemsCount))
+                  itemController.carbonToUnit(
+                    itemController.currentValue - (difference * (itemController.currentValue / maxedItemsTotalValue))
+                  )
                 )
               )
             })
           } else {
             // When difference is > 0 (all other inputs have to be decreased)
             // we exclude the inputs that will be mined out after applying the difference
-            const minedItemsControllers = itemsControllers.filter(itemController => {
-              return (
-                itemController.isBelowMin(
-                  itemController.carbonToUnit(itemController.currentValue - (difference / itemsCount))
-                )
-              )
-            })
+            let minedItemsTotalValue = this.aggregateCurrentValueFor(itemsControllers)
 
-            // For each mined out items, we remove the remaining value between the current
-            // value and the min and update the difference (which is positive, '-')
-            // We then set the mined out item to its actual min
-            minedItemsControllers.forEach((itemController) => {
-              difference = difference - (itemController.currentValue - itemController.unitToCarbon(itemController.minValue))
-              itemController.currentValue = itemController.unitToCarbon(itemController.minValue)
-              itemController.updateQuantity()
-            })
-
-            itemsControllers = itemsControllers.filter(itemController => {
-              return (
-                !itemController.isBelowMin(
-                  itemController.carbonToUnit(itemController.currentValue - (difference / itemsCount))
+            if (minedItemsTotalValue > 0) {
+              const minedItemsControllers = itemsControllers.filter(itemController => {
+                return (
+                  itemController.isBelowMin(
+                    itemController.carbonToUnit(
+                      itemController.currentValue - (difference * (itemController.currentValue / minedItemsTotalValue))
+                    )
+                  )
                 )
-              )
-            })
+              })
+
+              // For each mined out items, we remove the remaining value between the current
+              // value and the min and update the difference (which is positive, '-')
+              // We then set the mined out item to its actual min
+              minedItemsControllers.forEach((itemController) => {
+                difference = difference - (itemController.currentValue - itemController.unitToCarbon(itemController.minValue))
+                itemController.currentValue = itemController.unitToCarbon(itemController.minValue)
+                itemController.updateQuantity()
+              })
+
+              minedItemsTotalValue = this.aggregateCurrentValueFor(itemsControllers)
+              
+              if (minedItemsTotalValue > 0) {
+                itemsControllers = itemsControllers.filter(itemController => {
+                  return (
+                    !itemController.isBelowMin(
+                      itemController.carbonToUnit(
+                        itemController.currentValue - (difference * (itemController.currentValue / minedItemsTotalValue))
+                      )
+                    )
+                  )
+                })
+              }
+            }
           }
 
           itemsCount = itemsControllers.length
+          const itemsTotalValue = this.aggregateCurrentValueFor(itemsControllers)
 
-          itemsControllers.forEach(itemController => {
-            let result = itemController.currentValue - (difference / itemsCount)
+          if (itemsTotalValue > 0) {
+            itemsControllers.forEach(itemController => {
+              let result = itemController.currentValue - (difference * (itemController.currentValue / itemsTotalValue))
 
-            itemController.currentValue = result
-            itemController.updateQuantity()
-          })
+              itemController.currentValue = result
+              itemController.updateQuantity()
+            })
+          }
 
           // After updating all items, we also update all categories counts
           // (should this be placed in the mainRecapController ?)
