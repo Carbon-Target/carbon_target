@@ -53,6 +53,7 @@ html
         initialize() {
           this.frequencyHash = { day: 365, week: 52, month: 12, year: 1 }
           this.resetSlider = false
+          this.mainRecapController = this.mainRecapController()
         }
 
         connect() {
@@ -115,13 +116,29 @@ html
           let result = this.unitToCarbon(this.quantityTarget.value)
           const memoizedCurrentValue = this.currentValue
 
-          if (result) {
+          if (result != undefined) {
             // when an event is present, we touch other sliders
             // the only time an event is not present is in the connect() call
             // change this to Action Parameters if needed
             if (event) {
               const difference = result - this.currentValue
               this.updateOtherSliders(difference)
+
+              // If the overall main-recap value is > objective, we substract the
+              // residue from the CURRENT MOVING SLIDER (used mostly when we suddenly
+              // push a slider very high)
+              let mainRecapTotal = 0
+              this.mainRecapController.carbonItemControllers().forEach(itemController => {
+                if (itemController == this) {
+                  mainRecapTotal += parseFloat(result)
+                } else {
+                  mainRecapTotal += parseFloat(itemController.currentValue)
+                }
+              })
+              const mainRecapDifference = mainRecapTotal - this.mainRecapController.goalTarget.innerHTML * 1000
+              if (mainRecapDifference > 0) {
+                result = result - mainRecapDifference
+              }
             }
           }
 
@@ -160,7 +177,7 @@ html
         }
 
         updateOtherSliders(difference) {
-          let itemsControllers = this.mainRecapController().carbonItemControllers().filter(controller => {
+          let itemsControllers = this.mainRecapController.carbonItemControllers().filter(controller => {
             return controller !== this
           })
 
@@ -251,7 +268,7 @@ html
 
           // After updating all items, we also update all categories counts
           // (should this be placed in the mainRecapController ?)
-          this.mainRecapController().carbonRecapControllers().forEach((recapController) => {
+          this.mainRecapController.carbonRecapControllers().forEach((recapController) => {
             recapController.updateResult()
           })
         }
