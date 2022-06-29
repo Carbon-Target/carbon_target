@@ -21,7 +21,7 @@ html
       window.Stimulus = Application.start()
 
       Stimulus.register("slider", class extends Controller {
-        static targets = [ "range", "label", "value" ]
+        static targets = [ "range", "label", "value", "editContainer", "valueContainer", "labelInput" ]
 
         connect() {
           setTimeout(function() {
@@ -31,8 +31,23 @@ html
 
         updateLabelPosition() {
           this.valueTarget.innerHTML = this.rangeTarget.value
+          this.labelInputTarget.value = this.rangeTarget.value
           let percent = this.rangeTarget.value * 100 / this.rangeTarget.max
           this.labelTarget.style.left = `calc(${percent}% - ${this.labelTarget.clientWidth}px / 2)`
+        }
+
+        enableEdit() {
+          this.editContainerTarget.classList.toggle("is-hidden")
+          this.valueContainerTarget.classList.toggle("is-hidden")
+          if (!this.editContainerTarget.classList.contains("is-hidden")) {
+            this.labelInputTarget.focus()
+          }
+        }
+
+        submitEdit() {
+          this.rangeTarget.value = this.labelInputTarget.value
+          this.enableEdit()
+          this.editContainerTarget.dispatchEvent(new Event('update'))
         }
       })
 

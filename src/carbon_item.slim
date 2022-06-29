@@ -18,10 +18,15 @@ span.slider.mt-5 data-controller="slider" data-slide-target="slider" data-carbon
     = 0
   span.slider-container.is-align-self-center
     span.range-label.tag.is-info.is-normal data-slider-target="label"
-      span data-slider-target="value"
-        = send(:[], :value)
-      span
-        = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+      span data-slider-target="valueContainer" data-action="click->slider#enableEdit"
+        span data-slider-target="value"
+          = send(:[], :value)
+        span
+          = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+      span.is-hidden.edit-container data-slider-target="editContainer" data-action="update->carbon-item#updateResult update->slider#updateLabelPosition update->carbon-recap#updateResult"
+        input type="text" data-slider-target="labelInput"
+        button.label-submit data-action="click->slider#submitEdit"
+          = "✅"
     input.is-size-7-mobile.mx-2 [
       id=send(:[], :id)
       value=send(:[], :value)
