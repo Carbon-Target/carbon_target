@@ -1,4 +1,4 @@
-label.label.mt-3 for=send(:[], :id)
+label.label.mt-3.mb-5 for=send(:[], :id)
   - if send(:[], :kinds)
     - kinds = send(:[], :kinds)
     div.select
@@ -13,45 +13,36 @@ label.label.mt-3 for=send(:[], :id)
 
 - frequencies = { day: "jr", week: "sem", month: "mois", year: "an" }
 
-div.columns.is-mobile
-  div.column.is-two-thirds-tablet.is-half-mobile
-    div.columns.field.has-addons.is-vcentered
-      div.control.column.slider.mt-5 data-controller="slider" data-slide-target="slider" data-carbon-item-target="slider" data-kinds-picker-target="slider"
-        span.is-align-self-center data-carbon-item-target="min"
-          = 0
-        span.slider-container.is-align-self-center
-          span.range-label.tag.is-info.is-normal data-slider-target="label"
-            span data-slider-target="value"
-              = send(:[], :value)
-            span
-              = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
-          input.is-size-7-mobile.mx-2 [
-            id=send(:[], :id)
-            value=send(:[], :value)
-            type="range"
-            data-action="change->carbon-item#updateResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
-            data-kinds-picker-target="sliderElement"
-            data-carbon-item-target="quantity"
-            data-slider-target="range"
-            min="0" max="10000"]
-        span.is-align-self-center data-carbon-item-target="max"
-          = 10000
+span.slider.mt-5 data-controller="slider" data-slide-target="slider" data-carbon-item-target="slider" data-kinds-picker-target="slider"
+  span.min-max.is-align-self-center data-carbon-item-target="min"
+    = 0
+  span.slider-container.is-align-self-center
+    span.range-label.tag.is-info.is-normal data-slider-target="label"
+      span data-slider-target="value"
+        = send(:[], :value)
+      span
+        = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+    input.is-size-7-mobile.mx-2 [
+      id=send(:[], :id)
+      value=send(:[], :value)
+      type="range"
+      data-action="change->carbon-item#updateResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
+      data-kinds-picker-target="sliderElement"
+      data-carbon-item-target="quantity"
+      data-slider-target="range"
+      min="0" max="10000"]
+  span.min-max.is-align-self-center data-carbon-item-target="max"
+    = 10000
 
-  div.column.is-one-third-tablet.is-half-mobile
-    div.columns.is-vcentered.is-mobile
-      div.column.control.is-three-fifths-tablet.is-two-quarter-mobile
-        div.field
-          input.input.has-text-centered.is-size-7-mobile [
-            type="number"
-            value="0"
-            readonly="readonly"
-            data-carbon-item-target="result"
-            data-carbon-recap-target="result"
-            data-action="change->carbon-recap#updateResult"]
-      div.column.is-one-fifth-tablet.is-one-quarter-mobile.has-text-center.is-size-7-mobile
-        span
-          = "kgCO"
-          sub = "2"
-      div.locks.column.is-one-fifth-tablet.is-one-quarter-mobile.is-mobile data-action="click->carbon-item#toggleLock"
-        i.fas.fa-unlock.mt-5.has-text-primary data-carbon-item-target="unlock"
-        i.fas.fa-lock.mt-5.is-hidden.has-text-danger data-carbon-item-target="lock"
+span.is-size-7-mobile [
+  data-carbon-item-target="result"
+  data-carbon-recap-target="result"
+  data-action="change->carbon-recap#updateResult"]
+
+span
+  = " kgCO"
+  sub = "2"
+= " "
+span.locks data-action="click->carbon-item#toggleLock"
+  i.fas.fa-unlock.mt-5.has-text-primary data-carbon-item-target="unlock"
+  i.fas.fa-lock.mt-5.is-hidden.has-text-danger data-carbon-item-target="lock"
