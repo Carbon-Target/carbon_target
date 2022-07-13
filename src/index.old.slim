@@ -44,8 +44,7 @@ html
           }
         }
 
-        submitEdit(event) {
-          event.preventDefault()
+        submitEdit() {
           this.rangeTarget.value = this.labelInputTarget.value
           this.enableEdit()
           this.editContainerTarget.dispatchEvent(new Event('update'))
@@ -85,13 +84,19 @@ html
 
         minValueChanged() {
           this.minTarget.innerHTML = this.minValue
-          this.updateSliderLabelPosition()
+          const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
+          if (sliderController) {
+            sliderController.updateLabelPosition()
+          }
           this.quantityTarget.setAttribute("min", this.minValue)
         }
 
         maxValueChanged() {
           this.maxTarget.innerHTML = this.maxValue
-          this.updateSliderLabelPosition()
+          const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
+          if (sliderController) {
+            sliderController.updateLabelPosition()
+          }
           this.quantityTarget.setAttribute("max", this.maxValue)
         }
 
@@ -109,29 +114,8 @@ html
           return this.frequencyHash[this.frequencyValue]
         }
 
-        updateSliderLabelPosition() {
-          const sliderController = this.application.getControllerForElementAndIdentifier(
-            this.sliderTarget, 'slider'
-          )
-          if (sliderController) {
-            sliderController.rangeTarget.max = this.maxValue
-            sliderController.updateLabelPosition()
-          }
-        }
-
-        emissionFactorValueChanged(value, previousValue) {
-          setTimeout(function() {
-            this.mainRecapController.updateItemsMaxValue(
-              parseInt(this.mainRecapController.goalTarget.innerHTML) * 1000
-            )
-            // We have to force the callback maxValueChanged() because it is async
-            // and we need the updated value right away
-            this.maxValueChanged()
-            this.quantityTarget.value = this.currentValue / (value * this.computeFrequencyFactor())
-
-            this.updateResult()
-            this.updateSliderLabelPosition()
-          }.bind(this), 100)
+        emissionFactorValueChanged() {
+          this.updateResult()
         }
 
         unitToCarbon(value) {
@@ -342,8 +326,11 @@ html
 
       Stimulus.register("carbon-main-recap", class extends Controller {
         static targets = [ "item", "total", "box", "unit", "goal" ]
+        static classes = [ "aboveTarget", "belowTarget" ]
 
         connect() {
+          this.updateBoxColor(0)
+
           setTimeout(function() {
             this.updateItemsMaxValue(parseInt(this.goalTarget.innerHTML) * 1000)
           }.bind(this), 1000)
@@ -351,7 +338,7 @@ html
 
         carbonItemControllers() {
           const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
-          this.itemControllers = items.map(item => {
+          this.itemControllers ||= items.map(item => {
             return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
           })
           return this.itemControllers
@@ -365,32 +352,8 @@ html
           return this.recapControllers
         }
 
-        // When the overall goal is moved, we need to adjust all items accordingly
-        updateCarbonItems() {
-          const newGoal = parseInt(this.goalTarget.innerHTML) * 1000
-
-          // we exclude locked out inputs
-          let lockedItems = this.itemControllers.filter(itemController => {
-            return itemController.isLocked()
-          })
-          let unlockedItems = this.itemControllers.filter(itemController => {
-            return !(itemController.isLocked())
-          })
-          let lockedSum = this.itemControllers[0].aggregateCurrentValueFor(lockedItems)
-          let unlockedSum = this.itemControllers[0].aggregateCurrentValueFor(unlockedItems)
-
-          unlockedItems.forEach((itemController) => {
-            itemController.maxValueChanged()
-            itemController.quantityTarget.value *= (newGoal - lockedSum) / unlockedSum
-
-            itemController.updateResult()
-            itemController.updateSliderLabelPosition()
-          })
-        }
-
         // Sums the result of each line & updates the total
         updateResult() {
-
           let result = 0
           this.itemTargets.forEach(item => {
             result += parseFloat(item.innerHTML)
@@ -401,6 +364,7 @@ html
           this.totalTarget.innerHTML = result
 
           this.updateUnit(result);
+          this.updateBoxColor(result);
         }
 
         updateUnit(result) {
@@ -411,7 +375,18 @@ html
           }
         }
 
-        // Triggered from target-chooser controller when the total goal is changed
+        updateBoxColor(result) {
+          if (!this.hasBoxTarget) { return }
+          if (result <= parseFloat(this.goalTarget.innerHTML)) {
+            this.boxTarget.classList.remove(this.aboveTargetClass)
+            this.boxTarget.classList.add(this.belowTargetClass)
+          } else {
+            this.boxTarget.classList.remove(this.belowTargetClass)
+            this.boxTarget.classList.add(this.aboveTargetClass)
+          }
+        }
+
+        // Triggered from target-slider controller when the total goal is changed
         // All maximums should be updated.
         updateItemsMaxValue(goalValue) {
           this.carbonItemControllers().forEach((itemController) => {
@@ -423,6 +398,7 @@ html
             }
           })
         }
+
       })
 
       Stimulus.register("carbon-recap", class extends Controller {
@@ -510,13 +486,19 @@ html
           let item = this.element.closest('[data-controller~=carbon-item]')
           // Add to this condition if we don't want to change the slider value, but change the computed result instead
           if (item) {
+            if (this.sliderElementTarget && this.sliderElementTarget.value > 0) {
+              let newValue = this.sliderElementTarget.value * item.dataset.carbonItemEmissionFactorValue / this.selectTarget.value
+              this.sliderElementTarget.value = newValue
+              const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
+              sliderController.updateLabelPosition()
+            }
             item.dataset.carbonItemEmissionFactorValue = this.selectTarget.value
           }
         }
       })
 
-      Stimulus.register("target-chooser", class extends Controller {
-        static targets = [ "value", "unit" ]
+      Stimulus.register("target-slider", class extends Controller {
+        static targets = [ "value", "range", "unit" ]
 
         updateUnit(result) {
           if (result < 2) {
@@ -531,21 +513,21 @@ html
           return this.application.getControllerForElementAndIdentifier(mainRecap, 'carbon-main-recap')
         }
 
-        updateValue(value) {
-          this.valueTarget.innerHTML = value
+        updateValue() {
+          this.valueTarget.innerHTML = this.rangeTarget.value
 
-          this.updateUnit(this.valueTarget.value)
-          this.mainRecapController().updateItemsMaxValue(value * 1000)
+          this.updateUnit(this.rangeTarget.value)
+          this.mainRecapController().updateItemsMaxValue(this.rangeTarget.value * 1000)
         }
 
-        decreaseTargetValue() {
-          let tempValue = parseInt(this.valueTarget.textContent) - 1
-          this.updateValue(tempValue)
+        increaseValue() {
+          this.rangeTarget.value = parseInt(this.rangeTarget.value) + 1
+          this.updateValue()
         }
 
-        increaseTargetValue() {
-          let tempValue = parseInt(this.valueTarget.textContent) + 1
-          this.updateValue(tempValue)
+        decreaseValue() {
+          this.rangeTarget.value = parseInt(this.rangeTarget.value) - 1
+          this.updateValue()
         }
       })
 
@@ -568,7 +550,7 @@ html
         addTransport(event) {
           let targetName = event.target.value + "TemplateTarget"
           var clone = this[targetName].content.cloneNode(true)
-          this.element.parentNode.querySelector("ul").appendChild(clone)
+          this.element.parentNode.insertBefore(clone, this.element)
 
           this.formTarget.reset()
           this.toggleSelector()
@@ -578,158 +560,190 @@ html
 
     script type="text/javascript" src="javascript.js"
 
-body data-controller="carbon-main-recap"
-  div class="header"
-    div class="container is-max-widescreen"
-      a class="title logo"
-        = "Budget carbone annuel : "
-    
-      span class="target-chooser" data-controller="target-chooser"
-        button.arrow.left data-action="click->target-chooser#decreaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
-        span class="target-chooser-value"
-          span data-carbon-main-recap-target="goal" data-target-chooser-target="value"
-            = 2
-          span data-target-chooser-target="unit" &nbsp;tonnes
-        button.arrow.right data-action="click->target-chooser#increaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
-
-      span class="carbon-target"
-        = "Calcul : "
-        span data-carbon-main-recap-target="total"
-          = "0.0"
-        span class="is-hidden-tablet" t
-        span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
-
-  div class="container block-container is-max-widescreen"
+body class="container block is-max-widescreen"
+  section class="section" data-controller="carbon-main-recap" data-carbon-main-recap-below-target-class="has-background-primary-light" data-carbon-main-recap-above-target-class="has-background-danger-light"
     div class="content has-text-centered-desktop pb-6"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
 
       p
-        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'
-        a data-controller="modal" data-modal="#personalfootprint" data-action="click->modal#open"
-          | empreinte carbone personnelle
-        |  car
+        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car
         a data-controller="modal" data-modal="#calculators" data-action="click->modal#open"
           |  il en existe déjà de très bons
         |  !
-        br
-        | Carbon Target apporte simplement un complément
-        a data-controller="modal" data-modal="#problematic" data-action="click->modal#open"
-          |  sur cette problématique du carbone
-        | .
 
       p
-        | En effet, très souvent, après avoir calculé son empreinte carbone, on se demande : "mais alors, à quoi pourrait ressembler MA vie dans un monde à 2 tonnes" ? Carbon Target tente de répondre à cette question existentielle en 2 étapes :
+        | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de
+        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#open"
+          |  2 tonnes de CO2
+        |  ?"
+
+      p On vous spoile un peu la réponse :
 
       ol
-        li
-          | Vous vous fixez un "budget carbone" annuel de x tonnes (l'idéal est de viser 2 tonnes, voire 1 tonne pour les plus ambitieux)
-        li
-          | Vous ajustez les curseurs des principaux postes d'émission de carbone
-          a data-controller="modal" data-modal="#everydaylife" data-action="click->modal#open"
-            |  sur lesquels vous avez la main dans votre vie de tous les jours
-          | , sachant que l'outil ne vous laissera jamais dépasser le budget global que vous vous êtes fixé. Alors, vous privilégiez quoi ?
-
-      p
-        | S'il n'y a que 2 choses à retenir :
-
-      ol
-        li
-          | Une vie à 2 tonnes, c'est possible, et ça, c'est une super nouvelle ! C'est même
-          a data-controller="modal" data-modal="#desirable" data-action="click->modal#open"
-            |  souhaitable et désirable
-          |  !
+        li C'est possible, et ça, c'est une super nouvelle !
         li
           | C'est exigeant, nos modes de vie vont devoir
           a data-controller="modal" data-modal="#change" data-action="click->modal#open"
             |  changer radicalement à tous les niveaux
           | .
 
-      p
-        | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
+      p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
 
-    div class="block food" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2
-        span = "Se nourrir"
-        span.block-result
-          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-          span class="is-hidden-tablet" kg
-          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
-      ul data-slide-target="list"
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="7.26" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="0" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="beef" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de boeuf", id: "meal-beef", unit: "repas", frequency: "week", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.58" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="82.16" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="chicken" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de poulet", id: "meal-chicken", unit: "repas", frequency: "week", value: 2 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.51" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="530.4" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="veg" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
+    section class="is-mobile carbon-target" data-controller="target-slider"
+      section class="level"
+        div class="box level-item has-text-centered" data-carbon-main-recap-target="box"
+          div
+            p class="heading" Calcul
+            p class="title"
+              span data-carbon-main-recap-target="total"
+                = "0.0"
+              span class="is-hidden-tablet" t
+              span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
-    div class="block equipment" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2
-        span = "S'équiper"
-        span.block-result
-          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-          span class="is-hidden-tablet" kg
-          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
-      ul data-slide-target="list"
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€", frequency: "year", value: 0 })
-        li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="500" data-carbon-item-current-value="200" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
+        div class="level-item has-text-centered"
+          div
+            p class="heading" VS
 
-    div class="block move" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2
-        span = "Se déplacer"
-        span.block-result
-          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-          span class="is-hidden-tablet" kg
-          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
-      ul data-slide-target="list"
-        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="745" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5100, kinds: [{label: "Voiture SP", emission_factor: 0.149, selected: true}, {label: "Voiture GO", emission_factor: 0.142}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
-        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="35.52" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
-        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+        div class="box level-item has-text-centered has-background-primary-light"
+          div
+            p class="heading" Cible
+            p class="title"
+              span data-target-slider-target="value" data-carbon-main-recap-target="goal"
+                = "2"
+              span class="is-hidden-tablet" t
+              span class="is-hidden-mobile" data-target-slider-target="unit" &nbsp;tonnes
 
-      div class="block transport-creator" data-controller="transport-creator"
-        button class="button" data-action="transport-creator#toggleSelector" data-transport-creator-target="add"
-          i.fas.fa-plus.mr-1
-          | + Ajouter un moyen de transport
-        form data-transport-creator-target="form"
-          div.select
-            select data-action="transport-creator#addTransport"
-              option value="none"
-                | Choisissez un tranport
-              option value="car"
-                | Voiture
-              option value="train"
-                | Train
-              option value="plane"
-                | Avion
-          button class="button" data-action="transport-creator#toggleSelector"
-            i.fas.fa-times.mr-1
-            | Annuler
-        template#carTemplate data-transport-creator-target="carTemplate"
-          li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-            == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
-        template#trainTemplate data-transport-creator-target="trainTemplate"
-          li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-            == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 0, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
-        template#planeTemplate data-transport-creator-target="planeTemplate"
-          li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-            == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+      div class="target-slider"
+        div.control.slider
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateResult"
+            <img src="/images/left-arrow.png" />
+          span.slider-container.is-align-self-center
+            input.is-size-7-mobile [
+              value=2
+              type="range"
+              data-action="input->target-slider#updateValue input->carbon-main-recap#updateResult"
+              data-target-slider-target="range"
+              min="0" max="10" step="1"]
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
+            <img src="/images/right-arrow.png" />
 
-    div class="block home" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
-      h2
-        span = "Se loger"
-        span.block-result
-          span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
-          span class="is-hidden-tablet" kg
-          span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+    div.columns.is-8.is-variable
+      div.column.is-half.is-full-mobile
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "Se nourrir"
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+          ul data-slide-target="list"
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="7.26" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="0" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="beef" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de boeuf", id: "meal-beef", unit: "repas", frequency: "week", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="1.58" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="82.16" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="chicken" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas à base de poulet", id: "meal-chicken", unit: "repas", frequency: "week", value: 2 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.51" data-carbon-item-frequency-value="week" data-carbon-item-min-value="0" data-carbon-item-max-value="21" data-carbon-item-current-value="530.4" data-carbon-item-type-value="meal" data-carbon-item-subtype-value="veg" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Repas végétariens", id: "meal-veg", unit: "repas", frequency: "week", value: 20 })
 
-      ul data-slide-target="list"
-        li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="8.5" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="100" data-carbon-item-current-value="314.5" data-carbon-recap-target="item"
-          == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "Étiquette climat A", emission_factor: 3}, {label: "Étiquette climat B", emission_factor: 8.5, selected: true}, {label: "Étiquette climat C", emission_factor: 20.5}, {label: "Étiquette climat D", emission_factor: 40}, {label: "Étiquette climat E", emission_factor: 60}, {label: "Étiquette climat F", emission_factor: 85}, {label: "Étiquette climat G", emission_factor: 120}], kinds_title: "DPE du logement (étiquette climat) : " })
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "S'équiper"
+
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+          ul data-slide-target="list"
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Vêtements neufs", id: "clothes-new", unit: "€", frequency: "year", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.6" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="333" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Meubles neufs", id: "furniture-new", unit: "€", frequency: "year", value: 0 })
+            li data-controller="carbon-item" data-carbon-item-emission-factor-value="0.4" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="500" data-carbon-item-current-value="200" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Electronique neuf", id: "elec-new", unit: "€", frequency: "year", value: 500 })
+
+      div.column.is-half.is-full-mobile
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "Se déplacer"
+
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+          ul data-slide-target="list"
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="745" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5100, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="35.52" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+
+            div class="block mt-5" data-controller="transport-creator"
+              button class="button is-primary" data-action="transport-creator#toggleSelector" data-transport-creator-target="add"
+                i.fas.fa-plus.mr-1
+                | Ajouter un moyen de transport
+              form data-transport-creator-target="form"
+                div.select
+                  select data-action="transport-creator#addTransport"
+                    option value="none"
+                      | Choisissez un tranport
+                    option value="car"
+                      | Voiture
+                    option value="train"
+                      | Train
+                    option value="plane"
+                      | Avion
+                button class="button is-primary" data-action="transport-creator#toggleSelector"
+                  i.fas.fa-times.mr-1
+                  | Annuler
+              template#carTemplate data-transport-creator-target="carTemplate"
+                li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+              template#trainTemplate data-transport-creator-target="trainTemplate"
+                li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 0, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
+              template#planeTemplate data-transport-creator-target="planeTemplate"
+                li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+
+        div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
+          h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
+            span.icon-text data-action="click->slide#toggleList"
+              span.icon
+                i.fas.fa-angle-down data-slide-target="angleDown"
+                i.fas.fa-angle-up.is-hidden data-slide-target="angleUp"
+              span = "Se loger"
+
+            span
+              span data-carbon-recap-target="total" data-carbon-main-recap-target="item" 0
+              span class="is-hidden-tablet" kg
+              span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
+
+          ul data-slide-target="list"
+            li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="8.5" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="100" data-carbon-item-current-value="314.5" data-carbon-recap-target="item"
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "Étiquette climat A", emission_factor: 3}, {label: "Étiquette climat B", emission_factor: 8.5, selected: true}, {label: "Étiquette climat C", emission_factor: 20.5}, {label: "Étiquette climat D", emission_factor: 40}, {label: "Étiquette climat E", emission_factor: 60}, {label: "Étiquette climat F", emission_factor: 85}, {label: "Étiquette climat G", emission_factor: 120}], kinds_title: "DPE du logement (étiquette climat) : " })
+
+  section class="section"
+    div class="content has-text-centered-desktop pb-6"
+      p.has-text-centered-desktop
+        = "Vous l'avez constaté, le calcul ne se base que sur 4 besoins humains \"essentiels\" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc pas exhaustif. Il couvre tout de même près de 80% du périmètre de l'empreinte carbone personnelle et donne donc, sans entrer dans une grande complexité, une bonne idée de ce que l'on peut faire ou pas pour rester dans la limite des 2 tonnes."
+
+      p class="has-text-centered-desktop"
+        = "Carbon Target est un projet citoyen open source qui se base sur les données de l'ADEME (Bilan GES). Il s'agit pour l'instant d'un MVP basique et largement améliorable, qui a pour objectif de lancer une dynamique. En effet, nous serions ravis que des initiatives ou des institutions plus grandes et plus légitimes que nous (Shift Project, Datagir.Ademe.fr, Convention des Entreprises pour le Climat, MyCO2 by Carbone 4, Atelier 2 tonnes, …) aient envie de s'approprier cette idée simple pour la faire vivre et lui donner une autre dimension."
+
+      p class="has-text-centered-desktop"
+       | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
 
   == Slim::Template.new("./src/modals.slim").render()

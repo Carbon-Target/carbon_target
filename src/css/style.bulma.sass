@@ -1,0 +1,85 @@
+$container-offset: 5px
+
+//* Lets load all of the bulma framework
+@import "../../node_modules/bulma/bulma.sass"
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome"
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/brands"
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/regular"
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/solid"
+@import "../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims"
+
+.unit-select:not(.is-multiple):not(.is-loading):after
+  @include mobile
+    right: .825em
+    margin-top: -.6375em
+
+.content ol
+  list-style-position: inside
+
+.slider
+  .slider-container
+    position: relative
+    padding-top: 1.8em
+
+  input
+    width: calc(100% - 10em)
+
+  .range-label
+    position: absolute
+    left: 50%
+    top: 0
+    cursor: pointer
+
+    input
+       width: calc(100% - 25px)
+    .label-submit
+      cursor: pointer
+      border: none
+      background: transparent
+    .edit-container
+      width: 75px
+  .min-max
+    display: none
+
+input[type="radio"]
+  position: fixed
+  opacity: 0
+  pointer-events: none
+
+input[type="radio"] + span
+  padding: 10px 12px
+  border: 2px solid #FFF
+
+input[type="radio"]:checked + span
+  border: 2px solid hsl(217, 71%, 53%)
+
+.carbon-target
+  z-index: 10
+  position: sticky
+  top: 0px
+  padding: 10px 100px
+  margin: 0 -100px
+  background-color: $white
+
+  .level .level-item
+    margin-bottom: 1.5rem
+
+.target-slider
+  .arrow
+    cursor: pointer
+    user-select: none
+    vertical-align: sub
+  .slider
+    .slider-container
+      vertical-align: super
+      padding: 0 20px
+    input
+      width: calc(100% - 40px - 90px)
+.locks
+  float: right
+.locks i
+  display: contents
+  cursor: pointer
+
+.label.mb-5
+  margin-bottom: 2em!important

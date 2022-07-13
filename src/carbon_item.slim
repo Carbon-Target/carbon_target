@@ -1,54 +1,56 @@
-label.label.mt-3.mb-5 for=send(:[], :id)
+label.label for=send(:[], :id)
+  a data-controller="modal" data-modal="#modal-#{send(:[], :id)}" data-action="click->modal#open"
+    <img src="/images/i.svg" />
   - if send(:[], :kinds)
     - kinds = send(:[], :kinds)
-    div.select
+    div
       select name="kinds_#{send(:[], :id)}" data-kinds-picker-target="select" data-action="kinds-picker#changeKind"
         - kinds.each do |kind|
           option value=kind[:emission_factor] selected=kind[:selected]
             = kind[:label]
   - else
-    = send(:[], :name)
-  a data-controller="modal" data-modal="#modal-#{send(:[], :id)}" data-action="click->modal#open"
-    |  ⓘ
+    span.label-name
+      = send(:[], :name)
 
 - frequencies = { day: "jr", week: "sem", month: "mois", year: "an" }
 
-span.slider.mt-5 data-controller="slider" data-slide-target="slider" data-carbon-item-target="slider" data-kinds-picker-target="slider"
-  span.min-max.is-align-self-center data-carbon-item-target="min"
-    = 0
-  span.slider-container.is-align-self-center
-    span.range-label.tag.is-info.is-normal data-slider-target="label"
-      span data-slider-target="valueContainer" data-action="click->slider#enableEdit"
-        span data-slider-target="value"
-          = send(:[], :value)
-        span
-          = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
-      span.is-hidden.edit-container data-slider-target="editContainer" data-action="update->carbon-item#updateResult update->slider#updateLabelPosition update->carbon-recap#updateResult"
-        form data-action="slider#submitEdit"
-          input type="text" data-slider-target="labelInput"
-          button.label-submit
-            = "✅"
-    input.is-size-7-mobile.mx-2 [
-      id=send(:[], :id)
-      value=send(:[], :value)
-      type="range"
-      data-action="change->carbon-item#updateResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
-      data-kinds-picker-target="sliderElement"
-      data-carbon-item-target="quantity"
-      data-slider-target="range"
-      min="0" max="10000"]
-  span.min-max.is-align-self-center data-carbon-item-target="max"
-    = 10000
+span.slider-input
+  span.slider data-controller="slider" data-slide-target="slider" data-carbon-item-target="slider" data-kinds-picker-target="slider"
+    span.min-max.is-align-self-center data-carbon-item-target="min"
+      = 0
+    span.slider-container.is-align-self-center
+      span.range-label data-slider-target="label"
+        span data-slider-target="valueContainer" data-action="click->slider#enableEdit"
+          span data-slider-target="value"
+            = send(:[], :value)
+          span
+            = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
+        span.is-hidden.edit-container data-slider-target="editContainer" data-action="update->carbon-item#updateResult update->slider#updateLabelPosition update->carbon-recap#updateResult"
+          form data-action="slider#submitEdit"
+            input type="text" data-slider-target="labelInput"
+            button.label-submit
+              = "✅"
+      input.is-size-7-mobile.mx-2 [
+        id=send(:[], :id)
+        value=send(:[], :value)
+        type="range"
+        data-action="change->carbon-item#updateResult input->slider#updateLabelPosition change->carbon-recap#updateResult"
+        data-kinds-picker-target="sliderElement"
+        data-carbon-item-target="quantity"
+        data-slider-target="range"
+        min="0" max="10000"]
+    span.min-max.is-align-self-center data-carbon-item-target="max"
+      = 10000
 
-span.is-size-7-mobile [
-  data-carbon-item-target="result"
-  data-carbon-recap-target="result"
-  data-action="change->carbon-recap#updateResult"]
+  span.is-size-7-mobile [
+    data-carbon-item-target="result"
+    data-carbon-recap-target="result"
+    data-action="change->carbon-recap#updateResult"]
 
-span
-  = " kgCO"
-  sub = "2"
-= " "
-span.locks data-action="click->carbon-item#toggleLock"
-  i.fas.fa-unlock.mt-5.has-text-primary data-carbon-item-target="unlock"
-  i.fas.fa-lock.mt-5.is-hidden.has-text-danger data-carbon-item-target="lock"
+  span
+    = " kgCO"
+    sub = "2"
+  = " "
+  span.locks data-action="click->carbon-item#toggleLock"
+    i.open data-carbon-item-target="unlock"
+    i.is-hidden data-carbon-item-target="lock"
