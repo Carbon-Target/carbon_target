@@ -354,7 +354,7 @@ html
 
         carbonItemControllers() {
           const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
-          this.itemControllers ||= items.map(item => {
+          this.itemControllers = items.map(item => {
             return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
           })
           return this.itemControllers
@@ -368,8 +368,32 @@ html
           return this.recapControllers
         }
 
+        // When the overall goal is moved, we need to adjust all items accordingly
+        updateCarbonItems() {
+          const newGoal = parseInt(this.goalTarget.innerHTML) * 1000
+
+          // we exclude locked out inputs
+          let lockedItems = this.itemControllers.filter(itemController => {
+            return itemController.isLocked()
+          })
+          let unlockedItems = this.itemControllers.filter(itemController => {
+            return !(itemController.isLocked())
+          })
+          let lockedSum = this.itemControllers[0].aggregateCurrentValueFor(lockedItems)
+          let unlockedSum = this.itemControllers[0].aggregateCurrentValueFor(unlockedItems)
+
+          unlockedItems.forEach((itemController) => {
+            itemController.maxValueChanged()
+            itemController.quantityTarget.value *= (newGoal - lockedSum) / unlockedSum
+
+            itemController.updateResult()
+            itemController.updateSliderLabelPosition()
+          })
+        }
+
         // Sums the result of each line & updates the total
         updateResult() {
+
           let result = 0
           this.itemTargets.forEach(item => {
             result += parseFloat(item.innerHTML)
@@ -624,16 +648,16 @@ body class="container block is-max-widescreen"
 
       div class="target-slider"
         div.control.slider
-          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateResult"
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateCarbonItems click->carbon-main-recap#updateResult"
             <img src="/images/left-arrow.png" />
           span.slider-container.is-align-self-center
             input.is-size-7-mobile [
               value=2
               type="range"
-              data-action="input->target-slider#updateValue input->carbon-main-recap#updateResult"
+              data-action="input->target-slider#updateValue click->carbon-main-recap#updateCarbonItems input->carbon-main-recap#updateResult"
               data-target-slider-target="range"
-              min="0" max="10" step="1"]
-          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
+              min="1" max="10" step="1"]
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateCarbonItems click->carbon-main-recap#updateResult"
             <img src="/images/right-arrow.png" />
 
     div.columns.is-8.is-variable
