@@ -24,9 +24,10 @@ span.slider.mt-5 data-controller="slider" data-slide-target="slider" data-carbon
         span
           = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
       span.is-hidden.edit-container data-slider-target="editContainer" data-action="update->carbon-item#updateResult update->slider#updateLabelPosition update->carbon-recap#updateResult"
-        input type="text" data-slider-target="labelInput"
-        button.label-submit data-action="click->slider#submitEdit"
-          = "✅"
+        form data-action="slider#submitEdit"
+          input type="text" data-slider-target="labelInput"
+          button.label-submit
+            = "✅"
     input.is-size-7-mobile.mx-2 [
       id=send(:[], :id)
       value=send(:[], :value)

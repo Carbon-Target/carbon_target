@@ -44,7 +44,8 @@ html
           }
         }
 
-        submitEdit() {
+        submitEdit(event) {
+          event.preventDefault()
           this.rangeTarget.value = this.labelInputTarget.value
           this.enableEdit()
           this.editContainerTarget.dispatchEvent(new Event('update'))
