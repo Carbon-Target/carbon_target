@@ -350,3 +350,26 @@ div#modal-electricity.modal data-controller="modal"
         a href="https://www.build-green.fr/ecologie-et-residence-secondaire-sont-elles-compatibles/" target="_blank"
           |  impact non négligeable
         |  alors qu'elle n'est occupée qu'un petit % de l'année.
+
+div#about-us.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-card
+    header.modal-card-head
+      p.modal-card-title
+        | À propos
+      button.delete aria-label="close" data-action="click->modal#close"
+
+    section.modal-card-body
+      p
+        | Carbon Target est un projet citoyen, bénévole et open source qui se base sur les données de l'ADEME (Bilan GES). Nous serions ravis que des initiatives ou des institutions plus grandes et plus légitimes que nous (Shift Project, Datagir.Ademe.fr, MyCO2 by Carbone 4, Atelier 2 tonnes, Fresque du Climat, Inventons nos Vies Bas Carbone, …) aient envie de s'approprier cette idée simple pour la faire vivre et lui donner une autre dimension à travers leurs outils pré-existants.
+      p
+        |  
+      p
+        | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à
+        a href="mailto:hello@carbontarget.earth"
+          |  hello@carbontarget.earth
+        |  !
+      p
+        |  
+      p
+        | Nous sommes 3 personnes à l'origine de ce projet : Stéphane Akkaoui, Vincent Gabou et Gilles Vallier.
