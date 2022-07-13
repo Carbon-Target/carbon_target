@@ -85,19 +85,13 @@ html
 
         minValueChanged() {
           this.minTarget.innerHTML = this.minValue
-          const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
-          if (sliderController) {
-            sliderController.updateLabelPosition()
-          }
+          this.updateSliderLabelPosition()
           this.quantityTarget.setAttribute("min", this.minValue)
         }
 
         maxValueChanged() {
           this.maxTarget.innerHTML = this.maxValue
-          const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
-          if (sliderController) {
-            sliderController.updateLabelPosition()
-          }
+          this.updateSliderLabelPosition()
           this.quantityTarget.setAttribute("max", this.maxValue)
         }
 
@@ -115,8 +109,29 @@ html
           return this.frequencyHash[this.frequencyValue]
         }
 
-        emissionFactorValueChanged() {
-          this.updateResult()
+        updateSliderLabelPosition() {
+          const sliderController = this.application.getControllerForElementAndIdentifier(
+            this.sliderTarget, 'slider'
+          )
+          if (sliderController) {
+            sliderController.rangeTarget.max = this.maxValue
+            sliderController.updateLabelPosition()
+          }
+        }
+
+        emissionFactorValueChanged(value, previousValue) {
+          setTimeout(function() {
+            this.mainRecapController.updateItemsMaxValue(
+              parseInt(this.mainRecapController.goalTarget.innerHTML) * 1000
+            )
+            // We have to force the callback maxValueChanged() because it is async
+            // and we need the updated value right away
+            this.maxValueChanged()
+            this.quantityTarget.value = this.currentValue / (value * this.computeFrequencyFactor())
+
+            this.updateResult()
+            this.updateSliderLabelPosition()
+          }.bind(this), 100)
         }
 
         unitToCarbon(value) {
@@ -399,7 +414,6 @@ html
             }
           })
         }
-
       })
 
       Stimulus.register("carbon-recap", class extends Controller {
@@ -487,12 +501,6 @@ html
           let item = this.element.closest('[data-controller~=carbon-item]')
           // Add to this condition if we don't want to change the slider value, but change the computed result instead
           if (item) {
-            if (this.sliderElementTarget && this.sliderElementTarget.value > 0) {
-              let newValue = this.sliderElementTarget.value * item.dataset.carbonItemEmissionFactorValue / this.selectTarget.value
-              this.sliderElementTarget.value = newValue
-              const sliderController = this.application.getControllerForElementAndIdentifier(this.sliderTarget, 'slider')
-              sliderController.updateLabelPosition()
-            }
             item.dataset.carbonItemEmissionFactorValue = this.selectTarget.value
           }
         }
@@ -685,7 +693,7 @@ body class="container block is-max-widescreen"
               span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
           ul data-slide-target="list"
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="745" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5100, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5100, kinds: [{label: "Voiture SP", emission_factor: 0.149, selected: true}, {label: "Voiture GO", emission_factor: 0.142}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="35.52" data-carbon-recap-target="item"
               == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
