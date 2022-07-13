@@ -732,4 +732,15 @@ body data-controller="carbon-main-recap"
         li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="8.5" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="100" data-carbon-item-current-value="314.5" data-carbon-recap-target="item"
           == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 37, kinds: [{label: "Étiquette climat A", emission_factor: 3}, {label: "Étiquette climat B", emission_factor: 8.5, selected: true}, {label: "Étiquette climat C", emission_factor: 20.5}, {label: "Étiquette climat D", emission_factor: 40}, {label: "Étiquette climat E", emission_factor: 60}, {label: "Étiquette climat F", emission_factor: 85}, {label: "Étiquette climat G", emission_factor: 120}], kinds_title: "DPE du logement (étiquette climat) : " })
 
+    section class="section"
+      div class="content has-text-centered-desktop pb-6"
+        p.has-text-centered-desktop
+          = "Vous l'avez constaté, le calcul ne se base que sur 4 besoins humains \"essentiels\" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc pas exhaustif. Il couvre tout de même près de 80% du périmètre de l'empreinte carbone personnelle et donne donc, sans entrer dans une grande complexité, une bonne idée de ce que l'on peut faire ou pas pour rester dans la limite des 2 tonnes."
+
+        p class="has-text-centered-desktop"
+          = "Carbon Target est un projet citoyen open source qui se base sur les données de l'ADEME (Bilan GES). Il s'agit pour l'instant d'un MVP basique et largement améliorable, qui a pour objectif de lancer une dynamique. En effet, nous serions ravis que des initiatives ou des institutions plus grandes et plus légitimes que nous (Shift Project, Datagir.Ademe.fr, Convention des Entreprises pour le Climat, MyCO2 by Carbone 4, Atelier 2 tonnes, …) aient envie de s'approprier cette idée simple pour la faire vivre et lui donner une autre dimension."
+
+        p class="has-text-centered-desktop"
+         | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
+
   == Slim::Template.new("./src/modals.slim").render()
