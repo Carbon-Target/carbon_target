@@ -98,116 +98,110 @@ div#twotonnes.modal data-controller="modal"
       | .
   button.modal-close.is-large aria-label="close" data-action="click->modal#close"
 
-div#modal-car-gas.modal data-controller="modal"
+div#modal-car.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | Voiture essence
+        | Voiture
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
       p
-        | Facteur d’émission «
+        strong
+          | Voiture Essence Sans Plomb (SP)
+        |  : Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/152" target="_blank"
           | Voiture essence - Mixte - 2018
-        | » issu de la base « Bilan GES » de l’ADEME : 0.149 kgCO2e/passager.km
+        | » issu de la base « Bilan GES » de l’ADEME (0.149 kgCO2e/passager.km). Ce chiffre calculé par l’ADEME est basé sur une hypothèse de taux de remplissage moyen de 1,5 personne/voiture.
       p
-        | Ce chiffre calculé par l’ADEME est basé sur une hypothèse de taux de remplissage moyen de 1,5 personne/voiture
-
-div#modal-car-elec.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-card
-    header.modal-card-head
-      p.modal-card-title
-        | Voiture électrique
-      button.delete aria-label="close" data-action="click->modal#close"
-
-    section.modal-card-body
+        |  
       p
-        | Pour obtenir le facteur d’émission en kgCO2e/passager.km, nous avons utilisé le facteur d’émission «
+        strong
+          | Voiture Gazole (GO)
+        |  : Facteur d’émission «
+        a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/152" target="_blank"
+          | Voiture gazole - Mixte - 2018
+        | » issu de la base « Bilan GES » de l’ADEME (0.142 kgCO2e/passager.km). Ce chiffre calculé par l’ADEME est basé sur une hypothèse de taux de remplissage moyen de 1,5 personne/voiture.
+      p
+        |  
+      p
+        strong
+          | Voiture Hybride (VH)
+        |  : Pour obtenir le facteur d’émission en kgCO2e/passager.km, nous avons utilisé le facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/493" target="_blank"
-          | Voiture particulière - Cœur de gamme - Véhicule compact - Electrique
-        | » issu de la base « Bilan GES » de l’ADEME (0.103 kgCO2e/km), que nous avons divisé par le même taux de remplissage moyen que celui utilisé par l’ADEME pour la voiture essence (1,5 personne/voiture)
+          | Voiture particulière - Coeur de gamme - Véhicule compact - Hybride, full, Prius
+        | » issu de la base « Bilan GES » de l’ADEME (0.147 kgCO2e/km), que nous avons divisé par le même taux de remplissage moyen que celui utilisé par l’ADEME pour la voiture essence (1,5 personne/voiture). Le résultat obtenu est un facteur d’émission de 0.098 kgCO2e/passager.km.
       p
-        | Le résultat obtenu est un facteur d’émission de 0.0687 kgCO2e/passager.km
+        |  
+      p
+        strong
+          | Voiture Electrique (VE)
+        |  : Pour obtenir le facteur d’émission en kgCO2e/passager.km, nous avons utilisé le facteur d’émission «
+        a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/493" target="_blank"
+          |  Voiture particulière - Cœur de gamme - Véhicule compact - Electrique
+        | » issu de la base « Bilan GES » de l’ADEME (0.103 kgCO2e/km), que nous avons divisé par le même taux de remplissage moyen que celui utilisé par l’ADEME pour la voiture essence (1,5 personne/voiture). Le résultat obtenu est un facteur d’émission de 0.0687 kgCO2e/passager.km.
 
-div#modal-train-france.modal data-controller="modal"
+div#modal-train.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | Train France
+        | Train
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
       p
-        | Facteur d’émission «
+        strong
+          | Train France
+        |  : Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/181" target="_blank"
           |  Train grandes lignes - 2019
-        | » issu de la base « Bilan GES » de l’ADEME : 5.92E-3 kgCO2e/passager.km
-
-div#modal-train-euro.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-card
-    header.modal-card-head
-      p.modal-card-title
-        | Train Europe
-      button.delete aria-label="close" data-action="click->modal#close"
-
-    section.modal-card-body
+        | » issu de la base « Bilan GES » de l’ADEME (5.92E-3 kgCO2e/passager.km).
       p
-        | Nous avons réalisé une moyenne approximative des facteurs d’émission des pays européens de la page «
+        |  
+      p
+        strong
+          | Train Europe
+        |  : Nous avons réalisé une moyenne approximative des facteurs d’émission des pays européens de la page «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/185" target="_blank"
-          | Train de voyageurs – Autre pays du monde
-        | » de la base « Bilan GES » de l’ADEME
-      p
-        | Le résultat obtenu est un facteur d’émission de 0.05 kgCO2e/passager.km
+          |  Train de voyageurs – Autres pays du monde
+        | » de la base « Bilan GES » de l’ADEME. Le résultat obtenu est un facteur d’émission de 0.05 kgCO2e/passager.km.
 
-div#modal-plane-short.modal data-controller="modal"
+div#modal-plane.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | Avion court courrier
+        | Avion
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
       p
-        | Facteur d’émission «
+        strong
+          | Avion court courrier
+        |  : Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/547" target="_blank"
           | Avion passagers - Court courrier, 2018 - AVEC trainées
-        | » (distance inférieure à 1000 km) issu de la base « Bilan GES » de l’ADEME : 0.258 kgCO2e/peq.km
-
-div#modal-plane-mid.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-card
-    header.modal-card-head
-      p.modal-card-title
-        | Avion moyen courrier
-      button.delete aria-label="close" data-action="click->modal#close"
-
-    section.modal-card-body
+        | » (distance inférieure à 1000 km) issu de la base « Bilan GES » de l’ADEME (0.258 kgCO2e/peq.km).
       p
-        | Facteur d’émission «
+        |  
+      p
+        strong
+          | Avion moyen courrier
+        |  : Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/547" target="_blank"
           | Avion passagers - Moyen courrier, 2018 - AVEC trainées
-        | » (distance comprise entre 1000 km et 3500 km) issu de la base « Bilan GES » de l’ADEME : 0.187 kgCO2e/peq.km
-
-div#modal-plane-long.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-card
-    header.modal-card-head
-      p.modal-card-title
-        | Avion long courrier
-      button.delete aria-label="close" data-action="click->modal#close"
-
-    section.modal-card-body
+        | » (distance comprise entre 1000 et 3500 km) issu de la base « Bilan GES » de l’ADEME (0.187 kgCO2e/peq.km).
       p
-        | Facteur d’émission «
+        |  
+      p
+        strong
+          | Avion long courrier
+        |  : Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/547" target="_blank"
           | Avion passagers - Long courrier, 2018 - AVEC trainées
-        | » (distance supérieure à 3500 km) issu de la base « Bilan GES » de l’ADEME : 0.152 kgCO2e/peq.km
+        | » (distance supérieure à 3500 km) issu de la base « Bilan GES » de l’ADEME (0.152 kgCO2e/peq.km).
 
 div#modal-meal-beef.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
@@ -222,9 +216,11 @@ div#modal-meal-beef.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/296" target="_blank"
           | Repas - à dominante animale (avec bœuf)
-        | » issu de la base « Bilan GES » de l’ADEME : 7.26 kgCO2e/repas
+        | » issu de la base « Bilan GES » de l’ADEME : 7.26 kgCO2e/repas.
       p
-        | Par approximation, on peut intégrer dans cette catégorie tous les repas à base de veau et d’agneau
+        |  
+      p
+        | Par approximation, on peut intégrer dans cette catégorie tous les repas à base de veau et d’agneau.
 
 div#modal-meal-chicken.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
@@ -239,9 +235,11 @@ div#modal-meal-chicken.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/296" target="_blank"
           | Repas - à dominante animale (avec poulet)
-        | » issu de la base « Bilan GES » de l’ADEME : 1.58 kgCO2e/repas
+        | » issu de la base « Bilan GES » de l’ADEME : 1.58 kgCO2e/repas.
       p
-        | Par approximation, on peut intégrer dans cette catégorie tous les repas à base de porc et de viandes blanches de manière générale
+        |  
+      p
+        | Par approximation, on peut intégrer dans cette catégorie tous les repas à base de porc et de viandes blanches de manière générale.
 
 div#modal-meal-veg.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
@@ -256,7 +254,7 @@ div#modal-meal-veg.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/296" target="_blank"
           | Repas - végétarien
-        | » issu de la base « Bilan GES » de l’ADEME : 0.51 kgCO2e/repas
+        | » issu de la base « Bilan GES » de l’ADEME : 0.51 kgCO2e/repas.
 
 div#modal-clothes-new.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
@@ -271,11 +269,15 @@ div#modal-clothes-new.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/295" target="_blank"
           | Service - Textile et habillement
-        | » issu de la base « Bilan GES » de l’ADEME : 600 kgCO2e/keuro
+        | » issu de la base « Bilan GES » de l’ADEME : 600 kgCO2e/keuro.
       p
-        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant
+        |  
       p
-        | Les vêtements d’occasion sont évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul
+        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant.
+      p
+        |  
+      p
+        | Les vêtements d’occasion sont évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul.
 
 div#modal-furniture-new.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
@@ -290,18 +292,22 @@ div#modal-furniture-new.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/295" target="_blank"
           | Service - Meubles et autres biens manufacturés
-        | » issu de la base « Bilan GES » de l’ADEME : 600 kgCO2e/keuro
+        | » issu de la base « Bilan GES » de l’ADEME : 600 kgCO2e/keuro.
       p
-        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant
+        |  
       p
-        | Les meubles d’occasion sont évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul
+        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant.
+      p
+        |  
+      p
+        | Les meubles d’occasion sont évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul.
 
 div#modal-elec-new.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | Meubles neufs
+        | Electronique neuf
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
@@ -309,18 +315,22 @@ div#modal-elec-new.modal data-controller="modal"
         | Facteur d’émission «
         a href="https://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/295" target="_blank"
           | Service - Produits informatiques, électroniques et optiques
-        | » issu de la base « Bilan GES » de l’ADEME : 400 kgCO2e/keuro
+        | » issu de la base « Bilan GES » de l’ADEME : 400 kgCO2e/keuro.
       p
-        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant
+        |  
       p
-        | L’électronique d’occasion ou reconditionnée est évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul, même si cette approximation est « généreuse » dans le cas du reconditionné puisque des composants neufs ont pu être utilisés lors du reconditionnement
+        | Ce facteur d’émission est bien évidemment approximatif, puisque basé sur des €, mais permet tout de même de donner un ordre de grandeur intéressant.
+      p
+        |  
+      p
+        | L’électronique d’occasion ou reconditionnée est évidemment à privilégier : on fait ici l’approximation qu’ils ont un impact quasi-nul et n’ont pas à être pris en compte dans le calcul, même si cette approximation est « généreuse » dans le cas du reconditionné puisque des composants neufs ont pu être utilisés lors du reconditionnement.
 
 div#modal-electricity.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | Meubles neufs
+        | Résidence principale
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
@@ -328,10 +338,15 @@ div#modal-electricity.modal data-controller="modal"
         | Pour conserver une approche simple et pédagogique, nous avons fait le choix d’utiliser les données du nouveau «
         a href="https://www.ecologie.gouv.fr/sites/default/files/2021.02.15_ew_dp_dpe.pdf" target="_blank"
           | Diagnostic de Performance Energétique (DPE)
-        | ». Nous prenons l'hypothèse optimiste (il faut bien parfois) que le logement moyen français sera d'ici quelques années de « Catégorie B », soit des émissions de CO2 situées entre 7 et 11 kgCO2e/m².an
+        | ».
       p
-        | Nous considérons donc dans notre calcul un facteur d’émission moyen de 11 kgCO2e/m².an
+        |  
       p
-        | Attention, pour obtenir un résultat « personnel », il convient de diviser le nombre de m² de votre logement principal par le nombre d’habitants du logement
+        | Attention, pour obtenir un résultat « personnel », il convient de diviser le nombre de m² de votre logement principal par le nombre d’habitants du logement.
       p
-        | On voit ici bien l'importance de limiter son nombre de m² par personne dans une optique de sobriété
+        |  
+      p
+        | On voit ici bien l'importance de limiter son nombre de m² par personne dans une optique de sobriété. Par ailleurs, même si elle n'est pas chiffrée ici, une résidence secondaire a aussi un
+        a href="https://www.build-green.fr/ecologie-et-residence-secondaire-sont-elles-compatibles/" target="_blank"
+          |  impact non négligeable
+        |  alors qu'elle n'est occupée qu'un petit % de l'année.
