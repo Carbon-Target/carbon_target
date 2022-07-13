@@ -1,3 +1,90 @@
+div#personalfootprint.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      | Si le concept d'empreinte carbone ne vous est pas familier, voici un
+      a href="https://bonpote.com/comment-calculer-son-empreinte-carbone/" target="_blank"
+        |  super article
+      |  qui vous explique tout !
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+div#calculators.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      | Si ce n'est pas encore fait, courrez calculer la vôtre sur
+      a href="https://nosgestesclimat.fr/" target="_blank"
+        |  Nos Gestes Climat
+      |  (ADEME) ou
+      a href="https://www.myco2.fr/fr/" target="_blank"
+        |  MyCO2
+      |  (Carbone 4).
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+div#problematic.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      p
+        | Le changement climatique n'est qu'un des nombreux problèmes environnementaux auxquels notre société doit faire face. La focalisation récente sur cette limite planétaire ne doit pas faire oublier l'aspect systémique, voire philosophique, du problème (magistralement expliqué dans
+        a href="https://youtu.be/EYGvfGyqDDY" target="_blank"
+          |  cette conférence d'Arthur Keller et Aurélien Barreau
+        | ).
+      p
+        |  
+      p
+        | Toutefois, cette focalisation peut avoir du bon si elle permet d'engager le virage radical de la sobriété car cela aura de fait un impact également positif sur la biodiversité, les pollutions, … En revanche, il faut impérativement que cette récente médiatisation s'accompagne d'un gros travail de sensibilisation pour éviter ce que le GIEC appelle les
+        a href="https://www.nourrituresterrestres.fr/p/maladaptation-definition-exemples" target="_blank"
+          |  "maladaptations"
+        | .
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+div#everydaylife.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      p
+        | Le simulateur Carbon Target ne se base que sur 4 besoins humains "essentiels" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc pas exhaustif, il ne tient par exemple pas compte des "services publics", qui pèsent pour 1,1 tonne chez tous les français. Il couvre tout de même près de 80% du périmètre de l'empreinte carbone moyenne actuelle et donne donc, sans entrer dans une grande complexité, une bonne idée de ce que l'on peut faire ou pas à son niveau personnel.
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+div#desirable.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      p
+        | Il faut bien réaliser qu'une vie "bas carbone" n'est pas une vie triste ou sacrificielle, bien au contraire. La plupart des choses qui nous rendent réellement heureux sont déjà "bas carbone" (lire un livre, s'entraider entre voisins, se promener au bord d'une rivière, rire avec ses amis, faire l'amour, contempler la vie autour de soi, cultiver son jardin, voyager et rencontrer de nouvelles personnes, apprendre de nouveaux savoirs, ...) mais l'idéal de surconsommation propagé ces 50 dernières années nous a faire perdre de vue cette réalité.
+      p
+        |  
+      p
+        a href="https://youtu.be/KB30j_igzyQ" target="_blank"
+          | Cette vidéo
+        |  et
+        a href="https://www.bonheurbascarbone.com/a-propos" target="_blank"
+          |  ce site
+        |  l'illustrent magnifiquement bien !
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
+div#change.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    div.box
+      p
+        |  Ca ne se fera pas forcément en 1 an - en tout cas pas pour tous - mais
+        a href="https://bonpote.com/vivre-a-2-tonnes-co2e-par-an-cest-possible/" target="_blank"
+          |  il faut s'y mettre dès maintenant
+        | .
+      p
+        |  
+      p
+        | Il est par ailleurs important de préciser que l'idée de ce projet n'est absolument pas de faire peser toute la responsabilité sur les comportements de consommation individuels. Nous pensons que des citoyens conscients des problèmes et de la radicalité nécessaire à la transition peuvent avoir un impact bien au delà de leur consommation personnelle : ils peuvent faire changer les entreprises (en tant que dirigeants, salariés, clients) et le monde politique (en tant qu'électeurs).
+      p
+        |  
+      p
+        a href="https://www.carbone4.com/publication-faire-sa-part" target="_blank"
+          | C'est d'ailleurs là que réside l'essentiel de notre force en tant que citoyens
+        | .
+  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
+
 div#twotonnes.modal data-controller="modal"
   div.modal-background data-action="click->modal#close"
   div.modal-content
@@ -9,29 +96,6 @@ div#twotonnes.modal data-controller="modal"
       a href="https://www.myco2.fr/fr/empreinte-carbone-francaise-moyenne-comment-est-elle-calculee/" target="_blank"
         |  9,9 tonnes
       | .
-  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
-
-div#change.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-content
-    div.box
-      |  Ca ne se fera évidemment pas en 1 an mais il faut s'y mettre dès maintenant ! C'est aussi l'occasion d'en profiter pour
-      a href="https://www.notre-planete.info/actualites/4625-Pierre-Rabhi-vers-la-sobriete-heureuse" target="_blank"
-        |  questionner ce qui fait vraiment notre bonheur et notre épanouissement
-      | .
-  button.modal-close.is-large aria-label="close" data-action="click->modal#close"
-
-div#calculators.modal data-controller="modal"
-  div.modal-background data-action="click->modal#close"
-  div.modal-content
-    div.box
-      | Si ce n'est pas encore fait, courrez calculer la vôtre sur
-      a href="https://nosgestesclimat.fr/" target="_blank"
-        |  Nos Gestes Climat
-      |  par l'ADEME ou
-      a href="https://www.myco2.fr/fr/" target="_blank"
-        |  MyCO2
-      |  par Carbone4.
   button.modal-close.is-large aria-label="close" data-action="click->modal#close"
 
 div#modal-car-gas.modal data-controller="modal"
