@@ -385,8 +385,13 @@ html
           let unlockedSum = this.itemControllers[0].aggregateCurrentValueFor(unlockedItems)
 
           unlockedItems.forEach((itemController) => {
+            // Memoize here is CRUCIAL because changing the max on the next line
+            // WILL alter the current quantityTarget.value if this value is above
+            // the new max ...
+            let memoizedQuantityTarget = itemController.quantityTarget.value
+
             itemController.maxValueChanged()
-            itemController.quantityTarget.value *= (newGoal - lockedSum) / unlockedSum
+            itemController.quantityTarget.value = memoizedQuantityTarget * ((newGoal - lockedSum) / unlockedSum)
 
             itemController.updateResult()
             itemController.updateSliderLabelPosition()
