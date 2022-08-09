@@ -1,85 +1,211 @@
 $container-offset: 5px
+$family-sans-serif: "Roboto", BlinkMacSystemFont, -apple-system, "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif
 
-//* Lets load all of the bulma framework
 @import "../../node_modules/bulma/bulma.sass"
-@import "../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome"
-@import "../../node_modules/@fortawesome/fontawesome-free/scss/brands"
-@import "../../node_modules/@fortawesome/fontawesome-free/scss/regular"
-@import "../../node_modules/@fortawesome/fontawesome-free/scss/solid"
-@import "../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims"
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two&family=Roboto:wght@400;700&display=swap')
 
-.unit-select:not(.is-multiple):not(.is-loading):after
-  @include mobile
-    right: .825em
-    margin-top: -.6375em
+body
+  background: #465375
 
-.content ol
-  list-style-position: inside
+.header
+  background: #EFEFEF
+  margin-bottom: 100px
 
-.slider
-  .slider-container
-    position: relative
-    padding-top: 1.8em
+  .container
+    display: flex
+    align-items: center
+    padding: 30px 0
 
-  input
-    width: calc(100% - 10em)
+  .logo
+    font-family: 'Lobster Two'
+    margin-bottom: 0
 
-  .range-label
-    position: absolute
-    left: 50%
-    top: 0
-    cursor: pointer
+  .target-chooser
+    display: flex
+    align-items: center
 
-    input
-       width: calc(100% - 25px)
-    .label-submit
-      cursor: pointer
+    .target-chooser-value
+      height: 46px
+      margin: 0 10px
+      background: #4373EE
+      box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25)
+      border-radius: 10px
+      padding: 10px 12px
+
+      span
+        font-size: 20px
+        font-weight: 700
+        line-height: 23px
+        color: #FFFFFF
+
+    .arrow
+      display: inline-box
+      width: 47px
+      height: 46px
+      background: #465375 url(/images/left_arrow_vector.svg) no-repeat center
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
+      border-radius: 10px
+      outline: none
       border: none
+      cursor: pointer
+    .arrow.right
+      background: #465375 url(/images/right_arrow_vector.svg) no-repeat center
+    .arrow:active
+      box-shadow: none
+
+
+  .carbon-target
+    margin-left: auto
+    font-style: normal
+    font-weight: 700
+    color: #465375
+    border: 1px solid #465375
+    border-radius: 10px
+    padding: 10px 20px
+
+.block-container
+  padding-bottom: 30px
+  color: #FFFFFF
+
+  .content ol
+    list-style-position: inside
+
+  a
+    color: #a6A6A6
+
+  h1
+    color: #FFFFFF
+
+.block
+  h2
+    display: flex
+    align-items: center
+    font-size: 24px
+    font-weight: 700
+    color: #FFFFFF
+
+    .block-result
+      font-size: 18px
+      line-height: 21px
+      margin-left: auto
+      border: 1px solid #FFFFFF
+      border-radius: 21px
+      padding: 10px 15px
+
+
+  ul
+    border-radius: 0px 30px 30px 30px
+    margin-top: 10px
+    padding: 35px 20px
+
+  li
+    display: flex
+    align-items: center
+    margin-bottom: 35px
+    span
+      font-size: 12px
+      line-height: 14px
+      color: #FFFFFF
+
+  li:last-child
+    margin-bottom: 0px
+
+  label.label
+    display: flex
+    align-items: center
+    margin-bottom: 0
+    a
+      display: contents
+      margin-right: 10px
+
+    .label-name
+      text-transform: uppercase
+      font-size: 15px
+      line-height: 18px
+      color: #FFFFFF
+      border: 1px solid #FFFFFF
+      border-radius: 10px
+      padding: 2px 10px
+      margin: 0 10px
+
+    select
+      appearance: none
+      text-transform: uppercase
+      font-size: 15px
+      font-weight: 700
+      line-height: 18px
+      color: #FFFFFF
+      border: 1px solid #FFFFFF
+      border-radius: 10px
       background: transparent
-    .edit-container
-      width: 75px
+      margin: 0 10px
+      padding: 2px 20px 2px 10px
+      background: url("/images/select.svg") right center no-repeat
+      background-position: 95%
+      appearance: none
+      -webkit-appearance: none
+      -moz-appearance: none
+      
+      
+      option
+        padding: 0
+        margin: 0
+
   .min-max
     display: none
 
-input[type="radio"]
-  position: fixed
-  opacity: 0
-  pointer-events: none
+  .slider-input
+    margin-left: auto
+    flex-grow: 1
+    display: flex
+    align-items: center
+    justify-content: flex-end
 
-input[type="radio"] + span
-  padding: 10px 12px
-  border: 2px solid #FFF
+    .slider
+      flex-grow: 1
+      max-width: 500px
 
-input[type="radio"]:checked + span
-  border: 2px solid hsl(217, 71%, 53%)
+      .slider-container
+        display: flex
+        width: 100%
 
-.carbon-target
-  z-index: 10
-  position: sticky
-  top: 0px
-  padding: 10px 100px
-  margin: 0 -100px
-  background-color: $white
+        input
+          flex-grow: 1
+  .locks
+    display: flex
+    align-items: center
+    margin-left: 5px
+    i
+      display: block
+      background: transparent url(/images/lock.svg) no-repeat center
+      width: 20px
+      height: 23px
+      background-size: contain
+      cursor: pointer
+    i.open
+      background: transparent url(/images/open-lock.svg) no-repeat center
+      
+.block.food ul
+  background-color: #F8B045
 
-  .level .level-item
-    margin-bottom: 1.5rem
+.block.equipment ul
+  background-color: #4373EE
 
-.target-slider
-  .arrow
-    cursor: pointer
-    user-select: none
-    vertical-align: sub
-  .slider
-    .slider-container
-      vertical-align: super
-      padding: 0 20px
-    input
-      width: calc(100% - 40px - 90px)
-.locks
-  float: right
-.locks i
-  display: contents
-  cursor: pointer
+.block.move ul
+  background-color: #FF7C7C
 
-.label.mb-5
-  margin-bottom: 2em!important
+.block.home ul
+  background-color: #86E1AB
+
+.transport-creator
+  position: relative
+  margin-top: -20px
+  text-align: center
+  button
+    background: #C45F5F
+    border: 1px solid #C45F5F
+    border-radius: 10px
+    font-size: 14px
+    line-height: 16px
+    color: #FFFFFF
+    
