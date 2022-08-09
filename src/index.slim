@@ -580,6 +580,38 @@ html
         }
       })
 
+      Stimulus.register("smooth-scroll", class extends Controller {
+        initialize () {
+          this.scroll = this.scroll.bind(this)
+        }
+
+        connect () {
+          this.element.addEventListener('click', this.scroll)
+        }
+
+         disconnect () {
+           this.element.removeEventListener('click', this.scroll)
+         }
+
+         scroll (event) {
+           event.preventDefault()
+
+           const id = this.element.hash.replace(/^#/, '')
+           const target = document.getElementById(id)
+
+           if (!target) {
+             return
+           }
+
+           const elementPosition = target.getBoundingClientRect().top + window.pageYOffset
+
+           window.scrollTo({
+             top: elementPosition,
+             behavior: 'smooth'
+           })
+         }
+        
+      })
 
     script type="text/javascript" src="javascript.js"
 
@@ -653,7 +685,11 @@ body data-controller="carbon-main-recap"
         p
           | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
 
-  div class="container block-container is-max-widescreen"
+        p
+          a.button.is-primary href="#simulator" data-controller="smooth-scroll"
+            | C'est parti !
+
+  div#simulator class="container block-container is-max-widescreen"
     div class="block food" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
       h2
         span = "Se nourrir"
