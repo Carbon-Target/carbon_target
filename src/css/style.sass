@@ -7,6 +7,10 @@ $family-sans-serif: "Roboto", BlinkMacSystemFont, -apple-system, "Segoe UI", "Ox
 body
   background: #465375
 
+.container
+  @include until($tablet)
+    margin: 0 5px
+
 .header
   background: #EFEFEF
   margin-bottom: 50px
