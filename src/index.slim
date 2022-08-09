@@ -713,8 +713,8 @@ body data-controller="carbon-main-recap"
             i.fas.fa-times.mr-1
             | Annuler
         template#carTemplate data-transport-creator-target="carTemplate"
-          li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-            == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+          li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5300" data-carbon-item-current-value="0" data-carbon-recap-target="item"
+            == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
         template#trainTemplate data-transport-creator-target="trainTemplate"
           li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="0" data-carbon-recap-target="item"
             == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train", unit: "km", frequency: "year", value: 0, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
