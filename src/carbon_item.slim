@@ -21,7 +21,7 @@ span.slider-input
     span.slider-container.is-align-self-center
       span.range-label data-slider-target="label"
         span data-slider-target="valueContainer" data-action="click->slider#enableEdit"
-          span data-slider-target="value"
+          span.fixed-number data-slider-target="value"
             = send(:[], :value)
           span
             = " #{send(:[], :unit)}#{ "/" + frequencies[send(:[], :frequency)&.to_sym] unless send(:[], :no_time_unit) }"
@@ -42,7 +42,7 @@ span.slider-input
     span.min-max.is-align-self-center data-carbon-item-target="max"
       = 10000
 
-  span.is-size-7-mobile [
+  span.fixed-number.is-size-7-mobile [
     data-carbon-item-target="result"
     data-carbon-recap-target="result"
     data-action="change->carbon-recap#updateResult"]
