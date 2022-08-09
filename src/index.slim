@@ -625,9 +625,9 @@ body data-controller="carbon-main-recap"
           | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'
           a data-controller="modal" data-modal="#personalfootprint" data-action="click->modal#open"
             | empreinte carbone personnelle
-          |  car
+          |  car il en existe déjà
           a data-controller="modal" data-modal="#calculators" data-action="click->modal#open"
-            |  il en existe déjà de très bons
+            |  de très bons
           |  !
           br
           | Carbon Target apporte simplement un complément
@@ -636,11 +636,13 @@ body data-controller="carbon-main-recap"
           | .
 
         p
-          | En effet, très souvent, après avoir calculé son empreinte carbone, on se demande : "mais alors, à quoi pourrait ressembler MA vie dans un monde à 2 tonnes" ? Carbon Target tente de répondre à cette question existentielle en 2 étapes :
+          | En effet, très souvent, après avoir calculé son empreinte carbone, on se demande : "mais alors, à quoi pourrait ressembler MA vie dans un monde à 2 tonnes" ?
+          br
+          | Carbon Target tente de répondre à cette question existentielle en 2 étapes :
 
         ol
           li
-            | Vous vous fixez un "budget carbone" annuel de x tonnes (l'idéal est de viser 2 tonnes, voire 1 tonne pour les plus ambitieux)
+            | Vous vous fixez un "budget carbone" annuel de x tonnes (l'idéal est de viser 2 tonnes, voire 1 tonne pour les plus ambitieux).
           li
             | Vous ajustez les curseurs des principaux postes d'émission de carbone
             a data-controller="modal" data-modal="#everydaylife" data-action="click->modal#open"
@@ -663,7 +665,8 @@ body data-controller="carbon-main-recap"
             | .
 
         p
-          | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
+          b
+            | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
 
         p
           a.button.is-primary href="#simulator" data-controller="smooth-scroll"
