@@ -580,30 +580,42 @@ html
         }
       })
 
+      Stimulus.register("smooth-scroll", class extends Controller {
+        initialize () {
+          this.scroll = this.scroll.bind(this)
+        }
+
+        connect () {
+          this.element.addEventListener('click', this.scroll)
+        }
+
+         disconnect () {
+           this.element.removeEventListener('click', this.scroll)
+         }
+
+         scroll (event) {
+           event.preventDefault()
+
+           const id = this.element.hash.replace(/^#/, '')
+           const target = document.getElementById(id)
+
+           if (!target) {
+             return
+           }
+
+           const elementPosition = target.getBoundingClientRect().top + window.pageYOffset
+
+           window.scrollTo({
+             top: elementPosition,
+             behavior: 'smooth'
+           })
+         }
+        
+      })
 
     script type="text/javascript" src="javascript.js"
 
 body data-controller="carbon-main-recap"
-  div class="header"
-    div class="container is-max-widescreen"
-      a class="title logo"
-        = "Budget carbone annuel : "
-    
-      span class="target-chooser" data-controller="target-chooser"
-        button.arrow.left data-action="click->target-chooser#decreaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
-        span class="target-chooser-value"
-          span data-carbon-main-recap-target="goal" data-target-chooser-target="value"
-            = 2
-          span data-target-chooser-target="unit" &nbsp;tonnes
-        button.arrow.right data-action="click->target-chooser#increaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
-
-      span class="carbon-target"
-        = "Calcul : "
-        span data-carbon-main-recap-target="total"
-          = "0.0"
-        span class="is-hidden-tablet" t
-        span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
-
   div class="hero intro"
     div class="container is-max-widescreen"
       div class="content has-text-centered-desktop pb-6"
@@ -652,6 +664,30 @@ body data-controller="carbon-main-recap"
 
         p
           | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
+
+        p
+          a.button.is-primary href="#simulator" data-controller="smooth-scroll"
+            | C'est parti !
+
+  div#simulator class="header"
+    div class="container is-max-widescreen"
+      a class="title logo"
+        = "Budget carbone annuel : "
+    
+      span class="target-chooser" data-controller="target-chooser"
+        button.arrow.left data-action="click->target-chooser#decreaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
+        span class="target-chooser-value"
+          span data-carbon-main-recap-target="goal" data-target-chooser-target="value"
+            = 2
+          span data-target-chooser-target="unit" &nbsp;tonnes
+        button.arrow.right data-action="click->target-chooser#increaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
+
+      span class="carbon-target"
+        = "Calcul : "
+        span data-carbon-main-recap-target="total"
+          = "0.0"
+        span class="is-hidden-tablet" t
+        span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
   div class="container block-container is-max-widescreen"
     div class="block food" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
