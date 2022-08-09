@@ -681,21 +681,21 @@ body data-controller="carbon-main-recap"
     div class="container is-max-widescreen"
       a class="title logo"
         = "Budget carbone annuel : "
-    
-      span class="target-chooser" data-controller="target-chooser"
-        button.arrow.left data-action="click->target-chooser#decreaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
-        span class="target-chooser-value"
-          span data-carbon-main-recap-target="goal" data-target-chooser-target="value"
-            = 2
-          span data-target-chooser-target="unit" &nbsp;tonnes
-        button.arrow.right data-action="click->target-chooser#increaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
+      span class="target-container"
+        span class="target-chooser" data-controller="target-chooser"
+          button.arrow.left data-action="click->target-chooser#decreaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
+          span class="target-chooser-value"
+            span data-carbon-main-recap-target="goal" data-target-chooser-target="value"
+              = 2
+            span data-target-chooser-target="unit" &nbsp;tonnes
+          button.arrow.right data-action="click->target-chooser#increaseTargetValue click->carbon-main-recap#updateResult click->carbon-main-recap#updateCarbonItems"
 
-      span class="carbon-target"
-        = "Calcul : "
-        span data-carbon-main-recap-target="total"
-          = "0.0"
-        span class="is-hidden-tablet" t
-        span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
+        span class="carbon-target"
+          = "Calcul : "
+          span data-carbon-main-recap-target="total"
+            = "0.0"
+          span class="is-hidden-tablet" t
+          span class="is-hidden-mobile" data-carbon-main-recap-target="unit" &nbsp;tonne
 
   div class="container block-container is-max-widescreen"
     div class="block food" data-controller="carbon-recap" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"

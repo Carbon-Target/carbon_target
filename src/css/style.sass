@@ -7,6 +7,10 @@ $family-sans-serif: "Roboto", BlinkMacSystemFont, -apple-system, "Segoe UI", "Ox
 body
   background: #465375
 
+.container
+  @include until($tablet)
+    margin: 0 5px
+
 .header
   background: #EFEFEF
   margin-bottom: 50px
@@ -15,13 +19,27 @@ body
   z-index: 2
 
   .container
-    display: flex
     align-items: center
     padding: 30px 0
+    display: flex
+    @include until($tablet)
+      padding: 10px 0
+
+    @include until($tablet)
+      flex-direction: column
+      justify-content: center
 
   .logo
     font-family: 'Lobster Two'
     margin-bottom: 0
+
+  .target-container
+    display: flex
+    align-items: center
+    flex-grow: 1
+    @include until($tablet)
+      width: 100%
+      justify-content: space-evenly
 
   .target-chooser
     display: flex
@@ -34,12 +52,19 @@ body
       box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25)
       border-radius: 10px
       padding: 10px 12px
+      @include until($tablet)
+        height: 35px
+        padding: 5px 6px
+        margin: 5px
 
       span
         font-size: 20px
         font-weight: 700
         line-height: 23px
         color: #FFFFFF
+        @include until($tablet)
+          font-size: 16px
+          line-height: 20px
 
     .arrow
       display: inline-box
@@ -51,20 +76,29 @@ body
       outline: none
       border: none
       cursor: pointer
+      @include until($tablet)
+        width: 35px
+        height: 35px
+        background-size: 25%
     .arrow.right
       background: #465375 url(/images/right_arrow_vector.svg) no-repeat center
+      @include until($tablet)
+        background-size: 25%
     .arrow:active
       box-shadow: none
 
 
   .carbon-target
-    margin-left: auto
     font-style: normal
     font-weight: 700
     color: #465375
     border: 1px solid #465375
     border-radius: 10px
     padding: 10px 20px
+    @include from($tablet)
+      margin-left: auto
+    @include until($tablet)
+      padding: 5px 10px
 
 .block-container
   padding-bottom: 30px
@@ -105,6 +139,9 @@ body
     display: flex
     align-items: center
     margin-bottom: 35px
+    @include until($tablet)
+      flex-direction: column
+      align-items: start
     span
       font-size: 12px
       line-height: 14px
@@ -163,6 +200,10 @@ body
     display: flex
     align-items: center
     justify-content: flex-end
+    @include until($tablet)
+      margin-left: 0
+      width: 100%
+      padding-top: 10px
 
     .slider
       flex-grow: 1
@@ -214,7 +255,7 @@ body
 
 .intro
   background: #FFF
-  padding-top: 100px
+  padding-top: 50px
 
   .content ol
     list-style-position: inside
