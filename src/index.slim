@@ -177,6 +177,11 @@ html
           this.quantityTarget.value = this.carbonToUnit(result)
           this.resultTarget.innerHTML = result < 0 ? 0 : Math.round(result)
           this.currentValue = result
+
+          // When we manually change the slider, make sure all displayed data is updated
+          if (event)
+            this.updateSlider()
+
           this.resultTarget.dispatchEvent(new Event('change'))
 
           if (this.resetSlider) {
