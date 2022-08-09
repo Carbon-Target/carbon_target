@@ -354,7 +354,7 @@ html
 
         carbonItemControllers() {
           const items = Array.from(this.element.querySelectorAll("[data-controller~=carbon-item]"))
-          this.itemControllers ||= items.map(item => {
+          this.itemControllers = items.map(item => {
             return this.application.getControllerForElementAndIdentifier(item, 'carbon-item')
           })
           return this.itemControllers
@@ -368,8 +368,32 @@ html
           return this.recapControllers
         }
 
+        // When the overall goal is moved, we need to adjust all items accordingly
+        updateCarbonItems() {
+          const newGoal = parseInt(this.goalTarget.innerHTML) * 1000
+
+          // we exclude locked out inputs
+          let lockedItems = this.itemControllers.filter(itemController => {
+            return itemController.isLocked()
+          })
+          let unlockedItems = this.itemControllers.filter(itemController => {
+            return !(itemController.isLocked())
+          })
+          let lockedSum = this.itemControllers[0].aggregateCurrentValueFor(lockedItems)
+          let unlockedSum = this.itemControllers[0].aggregateCurrentValueFor(unlockedItems)
+
+          unlockedItems.forEach((itemController) => {
+            itemController.maxValueChanged()
+            itemController.quantityTarget.value *= (newGoal - lockedSum) / unlockedSum
+
+            itemController.updateResult()
+            itemController.updateSliderLabelPosition()
+          })
+        }
+
         // Sums the result of each line & updates the total
         updateResult() {
+
           let result = 0
           this.itemTargets.forEach(item => {
             result += parseFloat(item.innerHTML)
@@ -575,28 +599,48 @@ body class="container block is-max-widescreen"
       h1 class="title is-1" Bienvenue sur Carbon Target&nbsp;!
 
       p
-        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'empreinte carbone personnelle car
+        | Ce projet n'a pas pour vocation d'être un nouveau calculateur d'
+        a data-controller="modal" data-modal="#personalfootprint" data-action="click->modal#open"
+          | empreinte carbone personnelle
+        |  car
         a data-controller="modal" data-modal="#calculators" data-action="click->modal#open"
           |  il en existe déjà de très bons
         |  !
+        br
+        | Carbon Target apporte simplement un complément
+        a data-controller="modal" data-modal="#problematic" data-action="click->modal#open"
+          |  sur cette problématique du carbone
+        | .
 
       p
-        | Notre but est uniquement de compléter ces calculateurs sur la partie "prospective", en permettant à n'importe qui de répondre facilement et de manière personnalisée à la question : "Qu'est ce que je peux faire avec un "budget" de
-        a data-controller="modal" data-modal="#twotonnes" data-action="click->modal#open"
-          |  2 tonnes de CO2
-        |  ?"
-
-      p On vous spoile un peu la réponse :
+        | En effet, très souvent, après avoir calculé son empreinte carbone, on se demande : "mais alors, à quoi pourrait ressembler MA vie dans un monde à 2 tonnes" ? Carbon Target tente de répondre à cette question existentielle en 2 étapes :
 
       ol
-        li C'est possible, et ça, c'est une super nouvelle !
+        li
+          | Vous vous fixez un "budget carbone" annuel de x tonnes (l'idéal est de viser 2 tonnes, voire 1 tonne pour les plus ambitieux)
+        li
+          | Vous ajustez les curseurs des principaux postes d'émission de carbone
+          a data-controller="modal" data-modal="#everydaylife" data-action="click->modal#open"
+            |  sur lesquels vous avez la main dans votre vie de tous les jours
+          | , sachant que l'outil ne vous laissera jamais dépasser le budget global que vous vous êtes fixé. Alors, vous privilégiez quoi ?
+
+      p
+        | S'il n'y a que 2 choses à retenir :
+
+      ol
+        li
+          | Une vie à 2 tonnes, c'est possible, et ça, c'est une super nouvelle ! C'est même
+          a data-controller="modal" data-modal="#desirable" data-action="click->modal#open"
+            |  souhaitable et désirable
+          |  !
         li
           | C'est exigeant, nos modes de vie vont devoir
           a data-controller="modal" data-modal="#change" data-action="click->modal#open"
             |  changer radicalement à tous les niveaux
           | .
 
-      p Maintenant, c'est à vous de jouer : à quoi pourrait ressembler votre vie à 2 tonnes ?
+      p
+        | Maintenant, c'est à vous de jouer : à quoi ressemblerait votre vie à 2 tonnes ?
 
     section class="is-mobile carbon-target" data-controller="target-slider"
       section class="level"
@@ -624,16 +668,16 @@ body class="container block is-max-widescreen"
 
       div class="target-slider"
         div.control.slider
-          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateResult"
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#decreaseValue click->carbon-main-recap#updateCarbonItems click->carbon-main-recap#updateResult"
             <img src="/images/left-arrow.png" />
           span.slider-container.is-align-self-center
             input.is-size-7-mobile [
               value=2
               type="range"
-              data-action="input->target-slider#updateValue input->carbon-main-recap#updateResult"
+              data-action="input->target-slider#updateValue click->carbon-main-recap#updateCarbonItems input->carbon-main-recap#updateResult"
               data-target-slider-target="range"
-              min="0" max="10" step="1"]
-          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateResult"
+              min="1" max="10" step="1"]
+          span.arrow.has-text-link.is-size-2.is-align-self-center data-action="click->target-slider#increaseValue click->carbon-main-recap#updateCarbonItems click->carbon-main-recap#updateResult"
             <img src="/images/right-arrow.png" />
 
     div.columns.is-8.is-variable
@@ -693,11 +737,11 @@ body class="container block is-max-widescreen"
               span class="is-hidden-mobile" data-carbon-recap-target="unit" &nbsp;kilo
           ul data-slide-target="list"
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5300" data-carbon-item-current-value="789.7" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 5300, kinds: [{label: "Voiture SP", emission_factor: 0.149, selected: true}, {label: "Voiture GO", emission_factor: 0.142}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car", unit: "km", frequency: "year", value: 5300, kinds: [{label: "Voiture SP", emission_factor: 0.149, selected: true}, {label: "Voiture GO", emission_factor: 0.142}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="35.52" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train", unit: "km", frequency: "year", value: 5000, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
             li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+              == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
 
             div class="block mt-5" data-controller="transport-creator"
               button class="button is-primary" data-action="transport-creator#toggleSelector" data-transport-creator-target="add"
@@ -719,13 +763,13 @@ body class="container block is-max-widescreen"
                   | Annuler
               template#carTemplate data-transport-creator-target="carTemplate"
                 li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.149" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="5241" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car-gas", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Voiture", id: "car", unit: "km", frequency: "year", value: 0, kinds: [{label: "Voiture GO", emission_factor: 0.142, selected: true}, {label: "Voiture SP", emission_factor: 0.149}, {label: "Voiture VH", emission_factor: 0.098}, {label: "Voiture VE", emission_factor: 0.0687}], kinds_title: "Type de véhicule : " })
               template#trainTemplate data-transport-creator-target="trainTemplate"
                 li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.00592" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="131925" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train-france", unit: "km", frequency: "year", value: 0, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Train", id: "train", unit: "km", frequency: "year", value: 0, kinds: [{label: "Train France", emission_factor: 0.00592, selected: true}, {label: "Train Europe", emission_factor: 0.05}], kinds_title: "Train en : " })
               template#planeTemplate data-transport-creator-target="planeTemplate"
                 li data-controller="carbon-item kinds-picker" data-carbon-item-emission-factor-value="0.258" data-carbon-item-frequency-value="year" data-carbon-item-min-value="0" data-carbon-item-max-value="3027" data-carbon-item-current-value="0" data-carbon-recap-target="item"
-                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane-short", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
+                  == Slim::Template.new("./src/carbon_item.slim").render({ name: "Avion", id: "plane", unit: "km", frequency: "year", value: 0, kinds: [{label: "Court courrier", emission_factor: 0.258, selected: true}, {label: "Moyen courrier", emission_factor: 0.187}, {label: "Long courrier", emission_factor: 0.152}], kinds_title: "Type d'avion : " })
 
         div class="block" data-controller="carbon-recap slide" data-action="carbon-recap:updateResult->carbon-main-recap#updateResult"
           h2 class="title is-4 has-background-info-light p-3 is-flex is-justify-content-space-between is-clickable"
@@ -745,14 +789,9 @@ body class="container block is-max-widescreen"
               == Slim::Template.new("./src/carbon_item.slim").render({ name: "Consommation énergie logement", id: "electricity", unit: "m²/hab", frequency: "year", no_week: true, no_month: true, no_time_unit: true, value: 36, kinds: [{label: "Étiquette climat A", emission_factor: 3}, {label: "Étiquette climat B", emission_factor: 8.5, selected: true}, {label: "Étiquette climat C", emission_factor: 20.5}, {label: "Étiquette climat D", emission_factor: 40}, {label: "Étiquette climat E", emission_factor: 60}, {label: "Étiquette climat F", emission_factor: 85}, {label: "Étiquette climat G", emission_factor: 120}], kinds_title: "DPE du logement (étiquette climat) : " })
 
   section class="section"
-    div class="content has-text-centered-desktop pb-6"
-      p.has-text-centered-desktop
-        = "Vous l'avez constaté, le calcul ne se base que sur 4 besoins humains \"essentiels\" (se déplacer, se nourrir, se loger, s'équiper) et n'est donc pas exhaustif. Il couvre tout de même près de 80% du périmètre de l'empreinte carbone personnelle et donne donc, sans entrer dans une grande complexité, une bonne idée de ce que l'on peut faire ou pas pour rester dans la limite des 2 tonnes."
-
-      p class="has-text-centered-desktop"
-        = "Carbon Target est un projet citoyen open source qui se base sur les données de l'ADEME (Bilan GES). Il s'agit pour l'instant d'un MVP basique et largement améliorable, qui a pour objectif de lancer une dynamique. En effet, nous serions ravis que des initiatives ou des institutions plus grandes et plus légitimes que nous (Shift Project, Datagir.Ademe.fr, Convention des Entreprises pour le Climat, MyCO2 by Carbone 4, Atelier 2 tonnes, …) aient envie de s'approprier cette idée simple pour la faire vivre et lui donner une autre dimension."
-
-      p class="has-text-centered-desktop"
-       | Que vous souhaitiez qu'on vous aide à intégrer Carbon Target à un de vos projets ou que vous souhaitiez reprendre l'idée à votre compte, n'hésitez pas à nous contacter à <a href="mailto:hello@carbontarget.earth">hello@carbontarget.earth</a> !
+    div class="content has-text-centered pb-6"
+      p
+        a data-controller="modal" data-modal="#about-us" data-action="click->modal#open"
+          | À propos
 
   == Slim::Template.new("./src/modals.slim").render()
