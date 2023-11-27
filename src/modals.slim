@@ -356,7 +356,7 @@ div#about-us.modal data-controller="modal"
   div.modal-card
     header.modal-card-head
       p.modal-card-title
-        | À propos
+        | Qui sommes-nous ?
       button.delete aria-label="close" data-action="click->modal#close"
 
     section.modal-card-body
@@ -373,3 +373,25 @@ div#about-us.modal data-controller="modal"
         |  
       p
         | Nous sommes 3 personnes à l'origine de ce projet : Stéphane Akkaoui, Vincent Gabou et Gilles Vallier.
+
+div#algorithm.modal data-controller="modal"
+  div.modal-background data-action="click->modal#close"
+  div.modal-content
+    header.modal-card-head
+      p.modal-card-title
+        | Envie de comprendre l'algo ?
+      button.delete aria-label="close" data-action="click->modal#close"
+
+    section.modal-card-body.content
+      p
+        | CarbonTarget se base sur un algorithme qui fait en sorte que quels que soient les mouvements des curseurs, l'empreinte carbone calculée respecte le "budget carbone" que vous vous êtes fixé. Voici quelques principes de son fonctionnement :
+
+      ul
+        li
+          | Si vous augmentez (ou respectivement, réduisez) un curseur, les autres curseurs qui ne sont pas à 0 vont automatiquement être réduits (respectivement, augmentés), au prorata de leur poids dans l'empreinte carbone totale, pour que le budget fixé soit toujours respecté.
+        li
+          | Les curseurs qui sont à 0 ne seront jamais modifiés automatiquement par l'algorithme. Si vous souhaitez qu'ils soient pris en compte par l'algorithme, augmentez-les préalablement "à la main" pour qu'ils ne soient plus à 0.
+        li
+          | Si vous souhaitez "figer" un curseur pour qu'il ne fasse pas l'objet d'un ajustement automatique (à la hausse comme à la baisse), vous pouvez cliquer sur le cadenas en bout de ligne. Un curseur "verrouillé" peut seulement être modifié "à la main", mais ne sera jamais modifié automatiquement par l'algorithme. Il suffit ensuite de re-cliquer sur le cadenas pour le déverrouiller.
+        li
+          | Par extension des 2 points précédents, si tous les curseurs non verrouillés sont à 0 sauf un, vous ne pourrez plus modifier manuellement le curseur qui n'est pas à 0. Il vous faudra au préalable augmenter un (ou plusieurs des) curseur(s) qui sont à 0.
